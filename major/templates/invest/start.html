@@ -1,0 +1,39 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block title %}Start Investment{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  {% if messages %}
+    {% for m in messages %}
+      <div class="alert {% if m.tags %}alert-{{ m.tags }}{% else %}alert-info{% endif %}">{{ m }}</div>
+    {% endfor %}
+  {% endif %}
+
+  <div class="card">
+    <div class="card-body">
+      <h3 class="card-title mb-2">{{ rules.label }}</h3>
+      <p class="text-muted mb-4">
+        Allowed amount: <strong>${{ rules.min|floatformat:0 }}</strong> – <strong>${{ rules.max|floatformat:0 }}</strong>
+      </p>
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form.plan }}  {# hidden field #}
+
+        <div class="mb-3">
+          <label class="form-label">Amount</label>
+          {{ form.amount }}
+          {% if form.amount.errors %}
+            <div class="text-danger small">{{ form.amount.errors.0 }}</div>
+          {% endif %}
+        </div>
+
+        <button class="btn btn-primary">Start Investment</button>
+        <a class="btn btn-secondary" href="{% url 'plans' %}">Back to Plans</a>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

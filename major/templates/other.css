@@ -1,0 +1,35 @@
+
+
+{% comment %} https://media.istockphoto.com/photos/shot-of-a-consultant-going-through-paperwork-during-a-meeting-with-a-picture-id1327589078?b=1&k=20&m=1327589078&s=170667a&w=0&h=_VujAmfK-yY4-ivXW1veD1JRJTjLputDpc7qiiOnVb8=
+https://media.istockphoto.com/photos/confident-young-man-working-on-computer-picture-id1336658193?b=1&k=20&m=1336658193&s=170667a&w=0&h=6Td0f5XyTHwP18eszf74jnrOvn_-nkOOdvJIXF7qbTM=
+https://media.istockphoto.com/photos/asian-chinese-successful-businesswoman-meeting-discussion-with-her-picture-id1329317991?b=1&k=20&m=1329317991&s=170667a&w=0&h=tOovKqJSjZ-Zb9GzdrX5lsPUqsT0_IarevDOOUKz8oA=
+https://media.istockphoto.com/photos/agents-are-using-pens-pointing-to-contracts-and-are-being-explained-picture-id1283983283?b=1&k=20&m=1283983283&s=170667a&w=0&h=ddIBJmZ4Jl9HALq1Y5DBffvbFulfmY3x9N3C7ijxGLo= {% endcomment %}
+
+<style>
+.slider-bg{
+  background-image: url("https://images.unsplash.com/photo-1638913975386-d61f0ec6500d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80");
+  background-repeat: no-repeat;
+  background-position: center;
+  padding: 100px 50px;
+  background-size: cover;
+  z-index: 13000!important;
+  padding-bottom: 0px;
+  height: 600px
+}
+.slider-bg h1{
+  font-size: 60px;
+  text-align: left;
+  padding: 80px;
+  font-weight: 900!important;
+  line-height: 80px;
+  background-color: rgba(0,0,0,0.5);
+  border-radius: 15px;
+  padding-right: 500px;
+}
+</style>
+
+    <div class="slider-bg">
+      <h1>
+        The Better Way to Trade & Invest
+      </h1>
+    </div>

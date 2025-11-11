@@ -1,0 +1,90 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="yGV5oqbq8hbrH7zo9XfFtSoiheddBXuyuW8KhHyz">
+        <title>Altavellum | User Login</title>
+        
+        
+        <link rel="icon" href="{% static 'major/storage/app/public/photos/Asset%20369xtbonlinetrading.png'%}" type="image/png">
+                   
+            <link href="{% static 'major/temp/css/bootstrap.min.css'%}" rel="stylesheet" type="text/css">
+            <!-- Icons -->
+            <link href="{% static 'major/temp/css/materialdesignicons.min.css'%}" rel="stylesheet" type="text/css">
+        
+            <link rel="stylesheet" href="{% static 'major/temp/css/line.css'%}">
+            
+            <!-- Main Css -->
+            <link href="{% static 'major/temp/css/style.css'%}" rel="stylesheet" type="text/css">
+            <link href="{% static 'major/temp/css/colors/default.css'%}" rel="stylesheet">
+        
+
+    </head>
+    <body class="h-100 bg-soft-primary">
+
+        {% block content %}
+
+       <section class=" auth">
+        <div class="container">
+            <div class="pb-3 row justify-content-center">
+
+                <div class="col-12 col-md-6 col-lg-6 col-sm-10 col-xl-6">
+                    <div class="text-center">
+                    <a href="/"><img src="storage/app/public/photos/Asset%20368xtbonlinetrading.png" alt="" class="mb-3 img-fluid" width="80%"></a>
+                    </div>
+                    
+                                                                    <div class="bg-white shadow card login-page roundedd border-1 ">
+                        <div class="card-body">
+                            <h4 class="text-center card-title">User Login</h4>
+                            <form method="post" class="mt-4 login-form">
+                  
+                                
+                                {% csrf_token %}
+                
+                                {{form}}
+                
+                              
+                                  <div class="text-center">
+                                    <input type="submit" value="Login" class="btn btn-info mt-3">
+                                  </div>
+                                </form>
+                                <div class="card-footer text-center pt-0 px-lg-2 px-1">
+                                    <p class="mb-4 text-sm mx-auto">
+                                      Don't have an account?
+                                      <a href="{% url 'register' %}" class="text-info text-gradient font-weight-bold">Sign UP</a>
+                                    </p>
+                                  </div>
+                        </div>
+                    </div>
+                    <!---->
+                </div>
+                <!--end col-->
+            </div>
+            <!--end row-->
+        </div>
+        <!--end container-->
+    </section>
+    <!--end section-->
+
+{% endblock %}
+
+
+                 <script src="{% static 'major/temp/js/jquery-3.5.1.min.js'%}"></script>
+            <script src="{% static 'major/temp/js/bootstrap.bundle.min.js'%}"></script>
+            
+            <!-- SLIDER -->
+            <script src="{% static 'major/temp/js/owl.carousel.min.js'%}"></script>
+            <script src="{% static 'major/temp/js/owl.init.js'%}"></script>
+            <!-- Icons -->
+            <script src="{% static 'major/temp/js/feather.min.js'%}"></script>
+            <script src="https://account.xtbonlinetrading.com/temp/js/bundle.js"></script>
+            
+            <script src="{% static 'major/temp/js/app.js'%}"></script>
+            <script src="{% static 'major/temp/js/widget.js'%}"></script>
+       
+
+    </body>
+</html>

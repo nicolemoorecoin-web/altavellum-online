@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Edit {{ kind|title }} Time{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="card mx-auto" style="max-width: 640px;">
+    <div class="card-body">
+      <h5 class="card-title mb-3">Edit {{ kind|title }} {{ tx.reference }} — Date &amp; Time</h5>
+
+      <form method="post" action="">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label class="form-label">Occurred At</label>
+          {{ form.occurred_at }}
+          {% if form.occurred_at.help_text %}
+            <div class="form-text">{{ form.occurred_at.help_text }}</div>
+          {% endif %}
+          {% for e in form.occurred_at.errors %}
+            <div class="text-danger small">{{ e }}</div>
+          {% endfor %}
+        </div>
+
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-primary">Save</button>
+          <a href="{{ request.GET.next|default:request.META.HTTP_REFERER|default:'#' }}" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+      </form>
+
+      <hr class="my-4" />
+
+      <div class="text-muted small">
+        <div><b>Reference:</b> {{ tx.reference }}</div>
+        <div><b>Status:</b> {{ tx.status }}</div>
+        <div><b>Amount:</b> {{ tx.amount_usd }}</div>
+        <div><b>Occurred At:</b> {{ tx.occurred_at }}</div>
+        <div><b>Created At:</b> {{ tx.created_at }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

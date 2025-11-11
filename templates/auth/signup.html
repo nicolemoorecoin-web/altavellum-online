@@ -1,0 +1,240 @@
+{% extends 'layouts/base-fullscreen.html' %}
+
+{% block title %} Sign UP {% endblock title %}
+
+{% block stylesheets %}
+<style>
+  .inline-phone { display:grid; grid-template-columns: 120px 1fr; gap:.5rem; }
+  @media (max-width: 500px){ .inline-phone{ grid-template-columns: 100px 1fr; } }
+  .ccode { background:#fff; }
+  .text-error{ color: red; }
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+
+  <section>
+    <div class="page-header section-height-75">
+      <div class="container">
+        <div class="row">
+          <div class="col-xl-4 col-lg-5 col-md-6 d-flex flex-column mx-auto">
+            <div class="card card-plain mt-8">
+              <div class="card-header pb-0 text-left bg-transparent">
+                <h4 class="text-info text-gradient">
+                  Altavellum- Register
+                </h4>
+                <p class="mb-0">
+                    {% if msg %}
+                       <span style="color: green;"> {{ msg | safe }} 
+                    {% else %}
+                        Add your credentials or
+                    {% endif %}         
+                    <a href="{% url 'login' %}" 
+                    class="text-info text-gradient font-weight-bold">Sign IN</a> </span>        
+                </p>
+              </div>
+
+              <div class="card-body">
+                <form role="form text-left" method="post" action="">
+                  {% csrf_token %}
+
+                  <!-- FIRST / LAST NAME -->
+                  <label>First Name</label>
+                  <div class="mb-3">
+                    <input type="text" name="first_name" class="form-control" placeholder="First name" required />
+                  </div>
+
+                  <label>Last Name</label>
+                  <div class="mb-3">
+                    <input type="text" name="last_name" class="form-control" placeholder="Last name" required />
+                  </div>
+
+                  <!-- USERNAME (kept exactly as you had) -->
+                  <label>Username</label>
+                  <div class="mb-3">
+                    {{ form.username }}
+                  </div>
+                  <span class="text-error">{{ form.username.errors }}</span>
+
+                  <!-- EMAIL (kept exactly as you had) -->
+                  <label>Email</label>
+                  <div class="mb-3">
+                    {{ form.email }}
+                  </div>
+                  <span class="text-error">{{ form.email.errors }}</span>
+
+                  <!-- COUNTRY + PHONE -->
+                  <label>Country</label>
+                  <div class="mb-3">
+                    <select id="country" name="country" class="form-control" required></select>
+                  </div>
+
+                  <label>Phone</label>
+                  <div class="mb-3 inline-phone">
+                    <input id="phone_code" name="phone_code" class="form-control ccode" type="text" readonly placeholder="+1" />
+                    <input id="phone" name="phone" class="form-control" type="tel" inputmode="tel" pattern="[0-9 +()-]{6,}" placeholder="Phone number" required />
+                  </div>
+
+                  <!-- PASSWORDS (kept as you had) -->
+                  <label>Password</label>
+                  <div class="mb-3">
+                    {{ form.password1 }}
+                  </div>
+                  <span class="text-error">{{ form.password1.errors }}</span>
+
+                  <label>Password Check</label>
+                  <div class="mb-3">
+                    {{ form.password2 }}
+                  </div>
+                  <span class="text-error">{{ form.password2.errors }}</span>
+
+                  <!-- AGE + TERMS -->
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="is_adult" name="is_adult" required>
+                    <label class="form-check-label" for="is_adult">I confirm I am 18 years or older</label>
+                  </div>
+                  <div class="form-check mt-2">
+                    <input class="form-check-input" type="checkbox" id="accept_tos" name="accept_tos" required>
+                    <label class="form-check-label" for="accept_tos">I accept the <a href="{% url 'terms' %}" target="_blank" class="text-info text-gradient">Terms & Conditions</a></label>
+                  </div>
+
+                  <div class="text-center">
+                    <button type="submit" name="register" class="btn bg-gradient-info w-100 mt-4 mb-0">Sign UP</button>
+                  </div>
+                </form>
+              </div>
+
+              <div class="card-footer text-center pt-0 px-lg-2 px-1">
+                <p class="mb-4 text-sm mx-auto">
+                  Already have an account?
+                  <a href="{% url 'login' %}" class="text-info text-gradient font-weight-bold">Sign IN</a>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="oblique position-absolute top-0 h-100 d-md-block d-none me-n8">
+              <div class="oblique-image bg-cover position-absolute fixed-top ms-auto h-100 z-index-0 ms-n6" style="background-image:url('https://images.unsplash.com/photo-1605792657660-596af9009e82?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8dHJhZGluZ3xlbnwwfHwwfHw%3D&auto=format&fit=crop&w=600&q=60')"></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+{% endblock content %}
+
+{% block javascripts %}
+<script>
+/* === Countries + Dial Codes (ISO list) ===
+   Populates the <select> and auto-fills the phone_code input.
+   You can move this list to a static JS file later.
+*/
+const COUNTRY_DATA = [
+  {name:"Afghanistan", dial:"+93"}, {name:"Albania", dial:"+355"}, {name:"Algeria", dial:"+213"},
+  {name:"Andorra", dial:"+376"}, {name:"Angola", dial:"+244"}, {name:"Antigua and Barbuda", dial:"+1"},
+  {name:"Argentina", dial:"+54"}, {name:"Armenia", dial:"+374"}, {name:"Australia", dial:"+61"},
+  {name:"Austria", dial:"+43"}, {name:"Azerbaijan", dial:"+994"},
+  {name:"Bahamas", dial:"+1"}, {name:"Bahrain", dial:"+973"}, {name:"Bangladesh", dial:"+880"},
+  {name:"Barbados", dial:"+1"}, {name:"Belarus", dial:"+375"}, {name:"Belgium", dial:"+32"},
+  {name:"Belize", dial:"+501"}, {name:"Benin", dial:"+229"}, {name:"Bhutan", dial:"+975"},
+  {name:"Bolivia", dial:"+591"}, {name:"Bosnia and Herzegovina", dial:"+387"}, {name:"Botswana", dial:"+267"},
+  {name:"Brazil", dial:"+55"}, {name:"Brunei", dial:"+673"}, {name:"Bulgaria", dial:"+359"},
+  {name:"Burkina Faso", dial:"+226"}, {name:"Burundi", dial:"+257"},
+  {name:"Cabo Verde", dial:"+238"}, {name:"Cambodia", dial:"+855"}, {name:"Cameroon", dial:"+237"},
+  {name:"Canada", dial:"+1"}, {name:"Central African Republic", dial:"+236"}, {name:"Chad", dial:"+235"},
+  {name:"Chile", dial:"+56"}, {name:"China", dial:"+86"}, {name:"Colombia", dial:"+57"},
+  {name:"Comoros", dial:"+269"}, {name:"Congo (Congo-Brazzaville)", dial:"+242"},
+  {name:"Congo (DRC)", dial:"+243"}, {name:"Costa Rica", dial:"+506"}, {name:"Côte d’Ivoire", dial:"+225"},
+  {name:"Croatia", dial:"+385"}, {name:"Cuba", dial:"+53"}, {name:"Cyprus", dial:"+357"},
+  {name:"Czechia", dial:"+420"}, {name:"Denmark", dial:"+45"}, {name:"Djibouti", dial:"+253"},
+  {name:"Dominica", dial:"+1"}, {name:"Dominican Republic", dial:"+1"},
+  {name:"Ecuador", dial:"+593"}, {name:"Egypt", dial:"+20"}, {name:"El Salvador", dial:"+503"},
+  {name:"Equatorial Guinea", dial:"+240"}, {name:"Eritrea", dial:"+291"}, {name:"Estonia", dial:"+372"},
+  {name:"Eswatini", dial:"+268"}, {name:"Ethiopia", dial:"+251"},
+  {name:"Fiji", dial:"+679"}, {name:"Finland", dial:"+358"}, {name:"France", dial:"+33"},
+  {name:"Gabon", dial:"+241"}, {name:"Gambia", dial:"+220"}, {name:"Georgia", dial:"+995"},
+  {name:"Germany", dial:"+49"}, {name:"Ghana", dial:"+233"}, {name:"Greece", dial:"+30"},
+  {name:"Grenada", dial:"+1"}, {name:"Guatemala", dial:"+502"}, {name:"Guinea", dial:"+224"},
+  {name:"Guinea-Bissau", dial:"+245"}, {name:"Guyana", dial:"+592"},
+  {name:"Haiti", dial:"+509"}, {name:"Honduras", dial:"+504"}, {name:"Hungary", dial:"+36"},
+  {name:"Iceland", dial:"+354"}, {name:"India", dial:"+91"}, {name:"Indonesia", dial:"+62"},
+  {name:"Iran", dial:"+98"}, {name:"Iraq", dial:"+964"}, {name:"Ireland", dial:"+353"},
+  {name:"Israel", dial:"+972"}, {name:"Italy", dial:"+39"}, {name:"Jamaica", dial:"+1"},
+  {name:"Japan", dial:"+81"}, {name:"Jordan", dial:"+962"}, {name:"Kazakhstan", dial:"+7"},
+  {name:"Kenya", dial:"+254"}, {name:"Kiribati", dial:"+686"}, {name:"Kuwait", dial:"+965"},
+  {name:"Kyrgyzstan", dial:"+996"}, {name:"Laos", dial:"+856"}, {name:"Latvia", dial:"+371"},
+  {name:"Lebanon", dial:"+961"}, {name:"Lesotho", dial:"+266"}, {name:"Liberia", dial:"+231"},
+  {name:"Libya", dial:"+218"}, {name:"Liechtenstein", dial:"+423"}, {name:"Lithuania", dial:"+370"},
+  {name:"Luxembourg", dial:"+352"}, {name:"Madagascar", dial:"+261"}, {name:"Malawi", dial:"+265"},
+  {name:"Malaysia", dial:"+60"}, {name:"Maldives", dial:"+960"}, {name:"Mali", dial:"+223"},
+  {name:"Malta", dial:"+356"}, {name:"Marshall Islands", dial:"+692"}, {name:"Mauritania", dial:"+222"},
+  {name:"Mauritius", dial:"+230"}, {name:"Mexico", dial:"+52"}, {name:"Micronesia", dial:"+691"},
+  {name:"Moldova", dial:"+373"}, {name:"Monaco", dial:"+377"}, {name:"Mongolia", dial:"+976"},
+  {name:"Montenegro", dial:"+382"}, {name:"Morocco", dial:"+212"}, {name:"Mozambique", dial:"+258"},
+  {name:"Myanmar", dial:"+95"}, {name:"Namibia", dial:"+264"}, {name:"Nauru", dial:"+674"},
+  {name:"Nepal", dial:"+977"}, {name:"Netherlands", dial:"+31"}, {name:"New Zealand", dial:"+64"},
+  {name:"Nicaragua", dial:"+505"}, {name:"Niger", dial:"+227"}, {name:"Nigeria", dial:"+234"},
+  {name:"North Korea", dial:"+850"}, {name:"North Macedonia", dial:"+389"}, {name:"Norway", dial:"+47"},
+  {name:"Oman", dial:"+968"}, {name:"Pakistan", dial:"+92"}, {name:"Palau", dial:"+680"},
+  {name:"Panama", dial:"+507"}, {name:"Papua New Guinea", dial:"+675"}, {name:"Paraguay", dial:"+595"},
+  {name:"Peru", dial:"+51"}, {name:"Philippines", dial:"+63"}, {name:"Poland", dial:"+48"},
+  {name:"Portugal", dial:"+351"}, {name:"Qatar", dial:"+974"},
+  {name:"Romania", dial:"+40"}, {name:"Russia", dial:"+7"}, {name:"Rwanda", dial:"+250"},
+  {name:"Saint Kitts and Nevis", dial:"+1"}, {name:"Saint Lucia", dial:"+1"},
+  {name:"Saint Vincent and the Grenadines", dial:"+1"}, {name:"Samoa", dial:"+685"},
+  {name:"San Marino", dial:"+378"}, {name:"Sao Tome and Principe", dial:"+239"},
+  {name:"Saudi Arabia", dial:"+966"}, {name:"Senegal", dial:"+221"}, {name:"Serbia", dial:"+381"},
+  {name:"Seychelles", dial:"+248"}, {name:"Sierra Leone", dial:"+232"}, {name:"Singapore", dial:"+65"},
+  {name:"Slovakia", dial:"+421"}, {name:"Slovenia", dial:"+386"}, {name:"Solomon Islands", dial:"+677"},
+  {name:"Somalia", dial:"+252"}, {name:"South Africa", dial:"+27"}, {name:"South Korea", dial:"+82"},
+  {name:"South Sudan", dial:"+211"}, {name:"Spain", dial:"+34"}, {name:"Sri Lanka", dial:"+94"},
+  {name:"Sudan", dial:"+249"}, {name:"Suriname", dial:"+597"}, {name:"Sweden", dial:"+46"},
+  {name:"Switzerland", dial:"+41"}, {name:"Syria", dial:"+963"},
+  {name:"Taiwan", dial:"+886"}, {name:"Tajikistan", dial:"+992"}, {name:"Tanzania", dial:"+255"},
+  {name:"Thailand", dial:"+66"}, {name:"Timor-Leste", dial:"+670"}, {name:"Togo", dial:"+228"},
+  {name:"Tonga", dial:"+676"}, {name:"Trinidad and Tobago", dial:"+1"}, {name:"Tunisia", dial:"+216"},
+  {name:"Turkey", dial:"+90"}, {name:"Turkmenistan", dial:"+993"}, {name:"Tuvalu", dial:"+688"},
+  {name:"Uganda", dial:"+256"}, {name:"Ukraine", dial:"+380"}, {name:"United Arab Emirates", dial:"+971"},
+  {name:"United Kingdom", dial:"+44"}, {name:"United States", dial:"+1"}, {name:"Uruguay", dial:"+598"},
+  {name:"Uzbekistan", dial:"+998"}, {name:"Vanuatu", dial:"+678"}, {name:"Vatican City", dial:"+39"},
+  {name:"Venezuela", dial:"+58"}, {name:"Vietnam", dial:"+84"},
+  {name:"Yemen", dial:"+967"}, {name:"Zambia", dial:"+260"}, {name:"Zimbabwe", dial:"+263"}
+];
+
+(function(){
+  const sel = document.getElementById('country');
+  const code = document.getElementById('phone_code');
+
+  // Populate select
+  COUNTRY_DATA.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c.name;
+    opt.textContent = `${c.name} (${c.dial})`;
+    opt.dataset.dial = c.dial;
+    sel.appendChild(opt);
+  });
+
+  // Default (you can set a server-side value later)
+  const defaultIdx = COUNTRY_DATA.findIndex(c => c.name === "United States");
+  sel.selectedIndex = defaultIdx > -1 ? defaultIdx : 0;
+  code.value = COUNTRY_DATA[sel.selectedIndex].dial;
+
+  sel.addEventListener('change', () => {
+    const d = sel.options[sel.selectedIndex].dataset.dial || "";
+    code.value = d;
+  });
+})();
+</script>
+
+<script>
+  // Your original scrollbar code (kept)
+  var win = navigator.platform.indexOf('Win') > -1;
+  if (win && document.querySelector('#sidenav-scrollbar')) {
+    var options = { damping: '0.5' }
+    Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+  }
+</script>
+{% endblock javascripts %}

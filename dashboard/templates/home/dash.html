@@ -1,0 +1,520 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<script type="text/javascript" src="https://js.stripe.com/v3/"></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="Hpu1YwekAie3WsJoIqxE0XegMR5C0lpvKmTqFr0j">
+    <title>Altavellum| User panel</title>
+    <link rel="icon" href="https://res.cloudinary.com/dqedrkrmg/image/upload/v1698568839/a29a0870245240298efd508ff3fc0dd1-removebg-preview_qwbsu7.png" type="image/png"/>
+	
+				<!-- Fonts and icons -->
+		<script src="{% static 'new/webfont.min.js'%}"></script>
+	<!-- Sweet Alert -->
+		<script src="{% static 'new/sweetalert.min.js'%}"></script>
+		<!-- CSS Files -->
+		<link rel="stylesheet" href="{% static 'new/bootstrap.min.css'%}">
+		<!-- <link rel="stylesheet" href="./fonts.min.css"> -->
+		<link rel="stylesheet" href="{% static 'new/atlantis.min.css'%}">
+		<link rel="stylesheet" href="{% static 'new/customs.css'%}">
+		<link rel="stylesheet" href="{% static 'new/style.css'%}">
+		<link rel="stylesheet" href="{% static 'new/atlantis.min.css'%}">
+		<link rel="stylesheet" href="{% static 'new/buttons.dataTables.min.css'%}">
+		<link rel="stylesheet" type="text/css" href="{% static 'new/datatables.min.css'%}"/>
+        <script src="https://use.fontawesome.com/bb6a9cd06b.js"></script>
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>		
+			
+		<!-- Bootstrap Notify -->
+		<script src="./bootstrap-notify.min.js "></script>
+		<script src="./sweetalert.min.js "></script>
+		<script src="./alpine.min.js" defer></script>
+		<script src="./chart.min.js"></script>
+		<style>[wire\:loading], [wire\:loading\.delay], [wire\:loading\.inline-block], [wire\:loading\.inline], [wire\:loading\.block], [wire\:loading\.flex], [wire\:loading\.table], [wire\:loading\.grid] {display: none;}[wire\:offline] {display: none;}[wire\:dirty]:not(textarea):not(input):not(select) {display: none;}input:-webkit-autofill, select:-webkit-autofill, textarea:-webkit-autofill {animation-duration: 50000s;animation-name: livewireautofill;}@keyframes livewireautofill { from {} }</style>
+
+		 <!--PayPal-->
+		 <script>
+            // Add your client ID and secret
+            var PAYPAL_CLIENT = 'iidjdjdj';
+            var PAYPAL_SECRET = 'jijdjkdkdk';
+            
+            // Point your server to the PayPal API
+            var PAYPAL_ORDER_API = 'https://api.paypal.com/v2/checkout/orders/';
+        </script>
+        <script src="https://www.paypal.com/sdk/js?client-id=iidjdjdj"></script>
+		
+</head>
+<body data-background-color="dark">
+    <div id="app">
+        
+        <!--/PayPal-->
+            
+        <!--Start of Tawk.to Script-->
+        <script type="text/javascript">
+        {}
+        </script>
+        <!--End of Tawk.to Script-->
+		<div class="wrapper">
+			        <div class="main-header">
+    <!-- Logo Header -->
+    <div class="logo-header" data-background-color="dark">
+        <a href="/" class="logo" style="font-size: 1.3rem; color:#fff;">
+            <!--XTB Trading-->
+            <img class="auth__logo img-fluid" 
+                            src="https://res.cloudinary.com/dqedrkrmg/image/upload/v1698568839/a29a0870245240298efd508ff3fc0dd1-removebg-preview_qwbsu7.png" alt="alton" width="50px">
+        </a>
+        <button class="ml-auto navbar-toggler sidenav-toggler" type="button" data-toggle="collapse" data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon">
+                <i class="fa fa-bars"></i>
+            </span>
+        </button>
+        <button class="topbar-toggler more"><i class="icon-options-vertical"></i></button>
+        <div class="nav-toggle">
+            <button class="btn btn-toggle toggle-sidebar">
+                <i class="fa fa-bars"></i>
+            </button>
+        </div>
+    </div>
+    <!-- End Logo Header -->
+
+    <!-- Navbar Header -->
+    <nav class="navbar navbar-header navbar-expand-lg" data-background-color="dark">
+        
+        <div class="container-fluid">
+            <div class="text-center d-md-block d-none">
+                <a href="{% url 'invest' %}" class="pricing-action btn btn-warning btn-sm">Fund your Account</a> &nbsp;
+                <a href="{% url 'dashboard:withdraw' %}" class="pricing-action btn btn-danger btn-sm">Withdraw Funds</a>
+                
+            </div>
+            <ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
+               
+                <li class="nav-item hidden-caret">
+                    <form action="javascript:void(0)" method="post" id="styleform" class="form-inline">
+                       
+                        <div class="form-group">
+                            <label class="style_switch">
+                                <input name="style" id="style" type="checkbox" value="true" class="modes">
+                                <span class="slider round"></span>
+                            </label>
+                        </div> 
+                                                <script>document.getElementById("style").checked= true;</script>
+                                                <input type="hidden" name="_token" value="Hpu1YwekAie3WsJoIqxE0XegMR5C0lpvKmTqFr0j">
+                    </form>
+                </li>
+                                <li class="nav-item hidden-caret">
+                    <div id="google_translate_element"></div>
+                </li>
+                               
+                                <li class="nav-item dropdown hidden-caret">
+                    <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="false">
+                        <i class="fa fa-user"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user animated fadeIn">
+                        <div class="dropdown-user-scroll scrollbar-outer">
+                            <li>
+                                <div class="user-box">
+                                    
+                                   
+                                </div>
+                            </li>
+                            <li>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{% url 'invest' %}">Deposit/Trade</a>
+                                <a class="dropdown-item" href="{% url 'dashboard:withdraw' %}">Withdraw</a>
+                                <a class="dropdown-item" href="{% url 'investments' %}">View Trade</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{% url 'logout' %}">
+                                    Logout
+                                    </a>
+                              
+                            </li>
+                        </div>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!-- End Navbar -->
+</div>
+<script type="text/javascript">
+    //create investment
+        $("#styleform").on('change',function(){
+        $.ajax({
+            url: "https://account.xtbonlinetrading.com/dashboard/changetheme",
+            type: 'POST',
+            data:$("#styleform").serialize(),
+            success: function (data) {
+				location.reload(true);
+            },
+            error: function (data) {
+                console.log(data);
+            },
+
+        });
+    });
+    
+</script>        <!-- Stored in resources/views/child.blade.php -->
+
+<!-- Sidebar -->
+
+<div class="sidebar sidebar-style-2" data-background-color="dark">
+    <div class="sidebar-wrapper scrollbar scrollbar-inner">
+        <div class="sidebar-content">
+            <div class="user">
+                <div class="info">
+                    <a data-toggle="collapse" href="#collapseExample" aria-expanded="true">
+                        <span>
+                            Main Guy
+                            
+                            <span class="caret"></span>
+                        </span>
+                    </a>
+                    <div class="clearfix"></div>
+                    <div class="collapse in" id="collapseExample">
+                        <ul class="nav">
+                            
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <ul class="nav nav-primary">
+                <li class="nav-item active">
+                    <a href="{% url 'user-home' %}">
+                        <i class="fa fa-home"></i>
+                        <p>Dashboard</p>
+                    </a>
+                </li>
+                <li class="nav-item  ">
+                    <a href="{% url 'invest' %}">
+                        <i class="fa fa-download " aria-hidden="true"></i>
+                        <p>Deposit</p>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a href="{% url 'investments' %}">
+                        <i class="fa fa-cubes " aria-hidden="true"></i>
+                        <p>View Deposit</p>
+                    </a>
+                </li>
+                <li class="nav-item  ">
+                    <a href="{% url 'dashboard:withdraw' %}">
+                        <i class="fa fa-arrow-alt-circle-up " aria-hidden="true"></i>
+                        <p>Withdraw Funds</p>
+                    </a>
+                </li>
+                <!--<li class="nav-item">-->
+                <!--    <a data-toggle="collapse" href="#mpack">-->
+                <!--        <i class="fas fa-credit-card"></i>-->
+                <!--        <p>Withdraw</p>-->
+                <!--        <span class="caret"></span>-->
+                <!--    </a>-->
+                <!--    <div class="collapse" id="mpack">-->
+                <!--        <ul class="nav nav-collapse">-->
+                <!--            <li>-->
+                <!--                <a href="https://account.xtbonlinetrading.com/dashboard/withdrawals">-->
+                <!--                    <span class="sub-item">Request Withdrawal</span>-->
+                <!--                </a>-->
+                <!--            </li>-->
+                <!--            <li>-->
+                <!--                <a href="https://account.xtbonlinetrading.com/dashboard/account-settings#set">-->
+                <!--                    <span class="sub-item">My Wallet Address</span>-->
+                <!--                </a>-->
+                <!--            </li>-->
+                <!--        </ul>-->
+                <!--    </div>-->
+                <!--</li> -->
+
+                <li class="nav-item ">
+                    <a href="{% url 'crypto-withdrawal-list' %}">
+                        <i class="fa fa-signal " aria-hidden="true"></i>
+                        <p>View Withdrawal</p>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a href="{% url 'home' %}">
+                        <i class="fa fa-briefcase " aria-hidden="true"></i>
+                        <p>Go Back Home</p>
+                    </a>
+                </li>
+              
+                <li class="nav-item ">
+                    <a href="">
+                        <i class="fa fa-life-ring" aria-hidden="true"></i>
+                        <p>Help/Support</p>
+                    </a>
+                </li>
+                <!-- -->
+                <!--<li class="nav-item hidden-caret">-->
+                <!--    <div id="google_translate_element"></div>-->
+                <!--</li>-->
+                <!---->
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- End Sidebar -->
+{% block content %}
+        <div class="main-panel bg-dark">
+            <div class="content bg-dark">
+                <div class="page-inner">
+                    <div class="mt-2 mb-4">
+                        <h2 class="text-light pb-2">Welcome, {{ user.username|title }}!</h2>
+                                                        
+                             
+                    </div>
+                    <div>
+    </div>					<div>
+    </div>                    <div class="row">
+                          <div class="col-sm-6 col-lg-3">
+                            <div class="p-3 card bg-dark shadow">
+                                <div class="d-flex align-items-center">
+                                    <span class="mr-3 stamp stamp-md bg-success">
+                                      <i class="fa fa-dollar"></i>
+                                    </span>
+                                    <div>
+                                        <h5 class="mb-1 text-light"><b>$ {{ user.accounts.total_profit }}</b></h5>
+                                        <small class="text-muted text-light">Total Profit</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="p-3 card bg-dark shadow">
+                                <div class="d-flex align-items-center">
+                                    <span class="mr-3 stamp stamp-md bg-warning">
+                                       <i class="fa fa-download"></i>
+                                    </span>
+                                    <div>
+                                         <h5 class="mb-1 text-light">$ {{ user.accounts.total_deposit }}</h5> 
+                                                                                                                            
+                                        <small class="text-muted text-light">Total Deposit</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                       
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="p-3 card bg-dark shadow">
+                                <div class="d-flex align-items-center">
+                                    <span class="mr-3 stamp stamp-md bg-secondary">
+                                      <i class="fa fa-bitcoin"></i>
+                                    </span>
+                                    <div>
+                                        <h5 class="mb-1 text-light"><b>{{ user.accounts.btc_balance_equivalent }}BTC</b></h5>
+                                        <small class="text-muted">BTC Equivalent</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="p-3 card bg-dark shadow">
+                                <div class="d-flex align-items-center">
+                                    <span class="mr-3 stamp stamp-md bg-secondary">
+                                        <i class="fa fa-gift"></i>
+                                    </span>
+                                    <div>
+                                        <h5 class="mb-1 text-light"><b> ${{ user.accounts.account_balance }}</b></h5>
+                                        <small class="text-muted text-light">Account Balance</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                      
+                    </div>
+                    
+                    <!--widgets-->
+                    <div class="row">
+                         <div class="col-12">
+                             <!-- TradingView Widget BEGIN -->
+                                <div class="tradingview-widget-container mb-4">
+                                  <div class="tradingview-widget-container__widget"></div>
+                                  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+                                  {
+                                  "symbols": [
+                                    {
+                                      "proName": "FOREXCOM:SPXUSD",
+                                      "title": "S&P 500"
+                                    },
+                                    {
+                                      "proName": "FOREXCOM:NSXUSD",
+                                      "title": "Nasdaq 100"
+                                    },
+                                    {
+                                      "proName": "FX_IDC:EURUSD",
+                                      "title": "EUR/USD"
+                                    },
+                                    {
+                                      "proName": "BITSTAMP:BTCUSD",
+                                      "title": "BTC/USD"
+                                    },
+                                    {
+                                      "proName": "BITSTAMP:ETHUSD",
+                                      "title": "ETH/USD"
+                                    }
+                                  ],
+                                  "showSymbolLogo": true,
+                                  "colorTheme": "light",
+                                  "isTransparent": false,
+                                  "displayMode": "regular",
+                                  "locale": "en"
+                                }
+                                  </script>
+                                </div>
+                                <!-- TradingView Widget END -->
+                                
+                         </div>
+                    </div>
+                    
+                    <!--trading view-->
+                    <div class="row">
+                        <div class="col-lg-6">
+                             <!-- TradingView Widget BEGIN -->
+                            <div class="tradingview-widget-container">
+                              <div id="tradingview_8acc1"></div>
+                              <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+                              <script type="text/javascript">
+                              new TradingView.widget(
+                              {
+                              "width": "100%",
+                              "height": 400,
+                              "symbol": "NASDAQ:AAPL",
+                              "interval": "D",
+                              "timezone": "Etc/UTC",
+                              "theme": "light",
+                              "style": "1",
+                              "locale": "en",
+                              "toolbar_bg": "#f1f3f6",
+                              "enable_publishing": false,
+                              "allow_symbol_change": true,
+                              "container_id": "tradingview_8acc1"
+                            }
+                              );
+                              </script>
+                            </div>
+                            <!-- TradingView Widget END -->
+                        </div>
+                        <div class="col-lg-6 mt-5 mt-lg-0">
+                            <!-- TradingView Widget BEGIN -->
+                            <div class="tradingview-widget-container">
+                              <div class="tradingview-widget-container__widget"></div>
+                              <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-forex-cross-rates.js" async>
+                              {
+                              "width": "100%",
+                              "height": 400,
+                              "currencies": [
+                                "EUR",
+                                "USD",
+                                "JPY",
+                                "GBP",
+                                "CHF",
+                                "AUD",
+                                "CAD",
+                                "NZD",
+                                "CNY"
+                              ],
+                              "isTransparent": false,
+                              "colorTheme": "light",
+                              "locale": "en"
+                            }
+                              </script>
+                            </div>
+                            <!-- TradingView Widget END -->
+                        </div>
+                    </div>
+                    
+            </div>
+    				<footer class="footer bg-dark text-light">
+					<div class="container-fluid">
+						<div class="text-center row copyright text-align-center">
+							<p>All Rights Reserved &copy; Altavellum2022</p>
+						</div>
+					</div>
+				</footer>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+				<!--   Core JS Files   -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		
+		<script src="{% static 'new/popper.min.js'%}"></script>
+		<script src="{% static 'new/bootstrap.min.js'%}"></script>
+		<script src="{% static 'new/customs.js'%}"></script>
+		
+		<!-- jQuery UI -->
+		<script src="{% static 'new/jquery-ui.min.js'%}"></script>
+		<script src="{% static 'new/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js'%}"></script>
+
+		<!-- jQuery Scrollbar -->
+		<script src="{% static 'new/jquery.scrollbar.min.js'%} "></script>
+
+		<!-- jQuery Sparkline -->
+		<script src="{% static 'new/jquery.sparkline.min.js'%} "></script>
+
+		<!-- Sweet Alert -->
+		<script src="{% static 'new/sweetalert.min.js'%} "></script>
+		<!-- Bootstrap Notify -->
+		<script src="{% static 'new/bootstrap-notify.min.js'%} "></script>
+		
+		<script type="text/javascript" src="{% static 'new/datatables.min.js'%}"></script>
+
+		<script src="{% static 'new/atlantis.min.js'%}"></script>
+		<script src="{% static 'new/atlantis.js'%}"></script>
+
+		<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+		<script type="text/javascript">
+		function googleTranslateElementInit() {
+  new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+}
+		</script>
+
+		<script type="text/javascript">
+			var badWords = [ 
+				'<!--Start of Tawk.to Script-->',
+				'<script type="text/javascript">', 
+				'<!--End of Tawk.to Script-->'
+						];
+			$(':input').on('blur', function(){
+				var value = $(this).val();
+				$.each(badWords, function(idx, word){
+					value = value.replace(word, '');
+				});
+				$(this).val( value);
+			});
+		</script>
+		<script>
+			$(document).ready( function () {
+				$('#ShipTable').DataTable({
+					order: [ [0, 'desc'] ],
+					dom: 'Bfrtip',
+					buttons: [
+					'copy', 'csv', 'print', 'excel','pdf'
+				] 
+				});
+
+				
+				$(".dataTables_length select").addClass("bg-dark text-light");
+				$(".dataTables_filter input").addClass("bg-dark text-light");
+			} );
+		</script>
+		<script>
+			$(document).ready( function () {
+				$('.UserTable').DataTable({
+					order: [ [0, 'desc'] ]
+				});
+				$(".dataTables_length select").addClass("bg-dark text-light");
+				$(".dataTables_filter input").addClass("bg-dark text-light");
+			} );
+		</script>
+				<script src="/livewire/livewire.js?id=25f025805c3c370f7e87" data-turbo-eval="false" data-turbolinks-eval="false"></script><script data-turbo-eval="false" data-turbolinks-eval="false">window.livewire = new Livewire();window.Livewire = window.livewire;window.livewire_app_url = '';window.livewire_token = 'Hpu1YwekAie3WsJoIqxE0XegMR5C0lpvKmTqFr0j';window.deferLoadingAlpine = function (callback) {window.addEventListener('livewire:load', function () {callback();});};document.addEventListener("DOMContentLoaded", function () {window.livewire.start();});</script>
+	    
+    
+    <script src="//code.tidio.co/6oy7k8jxt0uaghlha54evuxdqivz805q.js" async></script>
+</body>
+</html>
+

@@ -1,0 +1,22 @@
+﻿# Python / Django
+__pycache__/
+*.pyc
+db.sqlite3
+/media/
+staticfiles/
+*.log
+
+# Envs / IDE
+.venv/
+venv/
+venv*/
+.vscode/
+.idea/
+.DS_Store
+
+# Archives
+*.zip
+
+# App static vendor blobs (ignore all app-level static to keep repo lean)
+dashboard/static/
+major/static/

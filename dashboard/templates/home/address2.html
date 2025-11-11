@@ -1,0 +1,244 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  
+<head>
+    <!-- Meta tags  -->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="shortcut icon" href="https://res.cloudinary.com/dqedrkrmg/image/upload/v1750268244/Screenshot_2025-06-18_at_18.30.22-removebg-preview_jo9abp.png">
+    <title>Stockblazee- Sign Up</title>
+
+    <!-- CSS Assets -->
+    <link rel="stylesheet" href="{% static 'new_auth/css/app.css' %}">
+
+    <!-- Javascript Assets -->
+    <script src="{% static 'new_auth/js/app.js' %}" defer=""></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+    <link href="{% static 'new_dashboard/css2?family=Inter:wght@400;500;600;700&amp;family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&amp;display=swap' %}" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'new_dashboard/ajax/libs/animate.css/4.1.1/animate.min.css' %}" integrity="sha512-c42qTSw/wPZ3/5LBzD+Bw5f7bSF2oxou6wEb+I/lqeaKV5FDIfMvvRp772y4jcJLKuGUOpbJMdg/BTl50fJYAw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+   <link rel="stylesheet" href="{% static 'new_dashboard/ajax/libs/limonte-sweetalert2/11.1.9/sweetalert2.min.css' %}" integrity="sha512-cyIcYOviYhF0bHIhzXWJQ/7xnaBuIIOecYoPZBgJHQKFPo+TOBA+BY1EnTpmM8yKDU4ZdI3UGccNGCEUdfbBqw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+   <script src="{% static 'new_dashboard/ajax/libs/limonte-sweetalert2/11.1.9/sweetalert2.all.min.js' %}" integrity="sha512-IZ95TbsPTDl3eT5GwqTJH/14xZ2feLEGJRbII6bRKtE/HC6x3N4cHye7yyikadgAsuiddCY2+6gMntpVHL1gHw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+   
+   <link rel='stylesheet' href="{% static 'new_dashboard/ajax/libs/intl-tel-input/17.0.13/css/intlTelInput.css' %}">
+   <link rel="stylesheet" href="{% static 'new_auth/country-code-selection/dist/style.css' %}">
+   
+  </head>
+  <body x-data="" class="is-header-blur" x-bind="$store.global.documentBody">
+         <!-- App preloader-->
+    <!--<div
+      class="app-preloader fixed z-50 grid h-full w-full place-content-center bg-slate-50 dark:bg-navy-900"
+    >
+      <div class="app-preloader-inner relative inline-block h-48 w-48"></div>
+    </div>-->
+
+    <!-- Page Wrapper -->
+    <div id="root" class="min-h-100vh flex grow bg-slate-50 dark:bg-navy-900" x-cloak="">
+      <div class="fixed top-0 hidden p-6 lg:block lg:px-12">
+        <a href="#" class="flex items-center space-x-2">
+          <img class="h-12" src="https://res.cloudinary.com/dqedrkrmg/image/upload/v1750268244/Screenshot_2025-06-18_at_18.30.22-removebg-preview_jo9abp.png" alt="logo">
+          <p class="text-xl font-semibold  text-slate-700 dark:text-navy-100">
+            
+          </p>
+        </a>
+      </div>
+      <div class="hidden w-full place-items-center lg:grid">
+        <div class="w-full max-w-lg p-6">
+          <img class="w-full" x-show="!$store.global.isDarkModeEnabled" src="{% static 'new_auth/images/illustrations/dashboard-meet.svg' %}" alt="image">
+          <img class="w-full" x-show="$store.global.isDarkModeEnabled" src="{% static 'new_auth/images/illustrations/dashboard-meet.svg' %}" alt="image">
+        </div>
+      </div>
+      <main class="flex w-full flex-col items-center bg-white dark:bg-navy-700 lg:max-w-md">
+        <div class="flex w-full max-w-sm grow flex-col justify-center p-5">
+          <div class="text-center">
+            <center><img class="" src="https://res.cloudinary.com/dqedrkrmg/image/upload/v1750268244/Screenshot_2025-06-18_at_18.30.22-removebg-preview_jo9abp.png" alt="logo" style="height:60px"></center>
+            <div class="mt-4">
+              <h2 class="text-2xl font-semibold text-slate-600 dark:text-navy-100">
+                Welcome To Stockblazee
+              </h2>
+              <p class="text-slate-400 dark:text-navy-300">
+                Please sign up to continue
+              </p>
+            </div>
+          </div>
+
+  
+          <div class="my-7 flex items-center space-x-3">
+            <div class="h-px flex-1 bg-slate-200 dark:bg-navy-500"></div>
+            <p class="text-tiny+ ">Join more than 7,500 Investors!</p>
+
+            <div class="h-px flex-1 bg-slate-200 dark:bg-navy-500"></div>
+          </div>
+           <form action="" method="post">
+            {% csrf_token %}
+          <div class="mt-2 space-y-4">
+
+
+            
+
+           
+              
+              
+                <input class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 pl-9 placeholder:text-slate-400/70 hover:z-10 hover:border-slate-400 focus:z-10 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent" placeholder="Referral" type="text" name="referer" hidden="">
+                
+                <div class="grid grid-cols-1 gap-4">
+
+
+
+                  <label class="block">
+                    
+                    <span class="relative mt-1.5 flex">
+                     {{ form.user }}
+                      <span class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent">
+                      </span>
+                    </span>
+                  </label>
+      
+                   
+      
+      
+      
+                  </div>
+            
+           
+
+                <div class="grid grid-cols-1 gap-4">
+
+
+
+                  <label class="block">
+                    
+                    <span class="relative mt-1.5 flex">
+                      {{ form.street_address }}
+                      <span class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent">
+                        <i class="fa-regular fa-envelope text-base"></i>
+                      </span>
+                    </span>
+                  </label>
+      
+                   
+      
+      
+      
+                  </div>
+
+
+
+             <div class="grid grid-cols-1 gap-4">
+
+
+
+            <label class="block">
+              
+              <span class="relative mt-1.5 flex">
+                {{ form.city }}
+                <span class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent">
+                  <i class="fa-regular fa-envelope text-base"></i>
+                </span>
+              </span>
+            </label>
+
+             
+
+
+
+            </div>
+
+
+             <div class="grid grid-cols-1 gap-4">
+
+
+
+            <label class="block">
+              
+              <span class="relative mt-1.5 flex">
+                {{ form.postal_code }}
+                <span class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent">
+                  <i class="fa fa-map"></i>
+                </span>
+              </span>
+            </label>
+
+          
+
+
+
+            </div>
+
+   <div class="grid grid-cols-1 gap-4">
+
+
+    <label class="block">
+   
+    <span class="relative mt-1.5 flex">
+     {{ form.country }}
+      <span class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent">
+        <i class="fa-regular fa-user text-base"></i>
+      </span>
+    </span>
+  </label>
+
+
+            <label class="block">
+              
+             
+              <span class="relative mt-1.5 flex">
+                {{ form.phone_number }}
+                <span class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent">
+                  <i class="fa-regular fa-user text-base"></i>
+                </span>
+              </span>
+            </label>
+
+
+          
+
+
+
+            </div>
+
+
+       
+         
+
+            <button class="btn mt-10 h-10 w-full bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90" type="submit" name="sub-reg" style="background:#F3BA2F;color:white">
+            Submit
+          </button>
+          
+          </div>
+          </form>
+        </div>
+        
+      </main>
+    </div>
+
+    <script>
+      var name = "{{ user.id }}";
+      document.getElementById("elder").value = name;
+    </script>
+
+    <!-- 
+        This is a place for Alpine.js Teleport feature 
+        @see https://alpinejs.dev/directives/teleport
+      -->
+    <div id="x-teleport-target"></div>
+    <script>
+      window.addEventListener("DOMContentLoaded", () => Alpine.start());
+    </script>
+     <script>
+     function urbg(){
+       //  alert(5);
+element=document.getElementsByTagName("html")[0];         
+  element.classList.add("dark");
+     }
+     
+     setTimeout(urbg,1000);
+ </script>
+ 
+  </body>
+</html>

@@ -1,0 +1,82 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} My Referrals {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+{% if request.user.is_authenticated %}
+{% if my_recs  %}
+
+<div class="row">
+    <div class="col-lg-5">
+        <div class="card h-100 p-3">
+          <div class="overflow-hidden position-relative border-radius-lg bg-cover h-100" style="background-image: url('/static/assets/img/ivancik.jpg');">
+            <span class="mask bg-gradient-dark"></span>
+            <div class="card-body position-relative z-index-1 d-flex flex-column h-100 p-3">
+              <h5 class="text-white font-weight-bolder mb-4 pt-2">Affiliate Bonus</h5>
+              <p class="text-white">Invite Your Friends And Gain Bonus For Referrals</p>
+              <input class="alert alert-dark" style="color: white;" type="text" disabled="" value="http://127.0.0.1:8000/{{ user.profile.code }}" id="p1">
+                                     <button  onclick="copyText1()">Copy Referral link</button> 
+                                 
+                               <br/>
+                                    
+                               <script>
+                                function copyText1(){
+                                    var text = document.getElementById("p1");
+                                    text.select();
+                                    document.execCommand("copy");
+                                    alert("Copied Referral Link: " + text.value);
+                                }
+                                </script>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+  <div class="col-lg-6">
+    <div class="card ">
+      <div class="card-header">
+        <h4 class="card-title"> My Referrals: </h4>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+         <div class='container'>
+            <ul>
+                {% if my_recs %}
+                <h5>Totoal Users Referred:  {{ my_recs|length }}</h5>
+                {% endif %}
+               
+                {% for p in my_recs   %}
+                
+                <li>{{p.user|title}}</li>
+        
+                {% endfor %}
+                {% else %}
+            <h4>You have no recommendations yet...</h4>
+            </ul>
+            
+    {% endif %}
+    {% comment %} {% if request.user.is_authenticated %}
+        {{request.user}}
+    {% else %}
+        <a href="{% url 'signup-view' %}">
+            <button class="btn btn-primary">Create an account</button>
+        </a>
+    {% endif %} {% endcomment %}
+    {% endif %}
+         </div>
+         <a class="btn bg-gradient-dark mb-0" href="{% url 'user-home' %}"><i class="fas fa-plus"></i>&nbsp;&nbsp;Go back home</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}
+

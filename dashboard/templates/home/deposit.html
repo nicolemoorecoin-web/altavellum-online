@@ -1,0 +1,322 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block title %}Deposit{% endblock %}
+
+{% block stylesheets %}
+<style>
+:root{
+  --bg:#0f1a23; --panel:#0e1b24; --ring:rgba(255,255,255,.12);
+  --ink:#d2a16d; --muted:#9fb0be; --text:#e9eef2; --accent:#b07131; --accent-ink:#1f1914;
+}
+.page{background:var(--bg); min-height:calc(100vh - 80px); padding:1.25rem 1rem 3rem}
+@media (min-width:992px){ .page{padding:2rem 2rem 4rem} }
+.card{background:var(--panel); border:1px solid var(--ring); border-radius:22px; padding:1.25rem; box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.card--accent{background:var(--accent); color:var(--accent-ink)}
+.kicker{color:#9fb0be; letter-spacing:.18em; font-size:.8rem; font-weight:800}
+.title{color:#f4e8d8; font-weight:900; letter-spacing:.08em; margin:.2rem 0 1rem}
+.h0{font-size:2.4rem; line-height:1.05; font-weight:900; color:#fff}
+.subtle{color:#9fb0be; font-weight:700}
+.grid{display:grid; gap:1rem}
+@media (min-width:992px){ .grid-2{grid-template-columns:1.05fr 1fr} }
+.input, select{
+  width:100%; background:#0a141b; border:1px solid var(--ring); color:var(--text);
+  padding:.75rem .9rem; border-radius:12px; outline:none;
+}
+label{display:block; color:#e9eef2; font-weight:700; letter-spacing:.04em; margin:.5rem 0 .35rem}
+.help{color:#9fb0be; font-size:.85rem}
+
+.methods{display:grid; gap:.8rem; grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (min-width:768px){ .methods{grid-template-columns:repeat(3,1fr)} }
+.method{background:#0c171f; border:1px solid var(--ring); border-radius:16px; padding:.9rem; display:flex; align-items:center; gap:.7rem; cursor:pointer}
+.method img{height:28px; width:28px}
+.method input{margin-left:auto; height:18px; width:18px}
+.method.active{border-color:rgba(255,255,255,.28); box-shadow:0 6px 16px rgba(0,0,0,.35)}
+
+/* ---- QR area (always perfectly centered & square) ---- */
+.qr{
+  background:#0a141b;
+  border:1px dashed var(--ring);
+  border-radius:16px;
+  padding:14px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+.qr-inner{
+  width:min(260px, 100%);
+  aspect-ratio:1/1;
+  background:#fff;
+  border-radius:12px;
+  box-shadow:0 2px 0 rgba(255,255,255,.06) inset;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+.qr-inner canvas,
+.qr-inner img{
+  max-width:88%;
+  max-height:88%;
+  display:block;
+  margin:auto;
+  border-radius:6px;
+  image-rendering: pixelated;
+}
+
+.addr{display:flex; gap:.6rem; align-items:center; background:#0a141b; border:1px solid var(--ring); border-radius:12px; padding:.6rem .8rem}
+.addr code{color:#e9eef2; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.copy{cursor:pointer; padding:.35rem .6rem; border:1px solid var(--ring); border-radius:8px}
+
+.btn{display:inline-flex; align-items:center; gap:.5rem; border-radius:12px; padding:.75rem 1.2rem; font-weight:900; letter-spacing:.5px; cursor:pointer; border:2px solid transparent}
+.btn--solid{background:var(--accent); color:var(--accent-ink); border-color:rgba(0,0,0,.35)}
+.btn--hollow{background:transparent; color:#fff; border-color:rgba(255,255,255,.18)}
+
+.table{width:100%; border-collapse:separate; border-spacing:0 10px}
+.table th{color:#cfd8df; font-weight:800; text-align:left; padding:.5rem .75rem}
+.table td{background:#0a141b; border:1px solid var(--ring); color:#e9eef2; padding:.8rem .9rem}
+.table tr td:first-child{border-top-left-radius:12px; border-bottom-left-radius:12px}
+.table tr td:last-child{border-top-right-radius:12px; border-bottom-right-radius:12px}
+
+.toast{position:fixed; right:18px; bottom:18px; background:#11202b; color:#e9eef2; border:1px solid var(--ring); border-radius:12px; padding:.9rem 1rem; min-width:260px; box-shadow:0 8px 30px rgba(0,0,0,.35); transform:translateY(16px); opacity:0; pointer-events:none; transition:.25s ease}
+.toast.show{opacity:1; transform:translateY(0); pointer-events:auto}
+.alert{background:#10202a;border:1px solid var(--ring);color:#d9f3ff;padding:.7rem 1rem;border-radius:10px;margin-bottom:.8rem}
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="page">
+
+  {% if messages %}
+    {% for m in messages %}
+      <div class="alert">{{ m }}</div>
+    {% endfor %}
+  {% endif %}
+
+  <!-- balance ribbon -->
+  <section class="card card--accent" style="margin-bottom:1rem">
+    <div class="grid grid-2">
+      <div>
+        <div class="subtle">Available Balance</div>
+        <div class="h0">{{ balance_usd|default:"0.00" }} <span style="font-size:1.1rem">USD</span></div>
+        <div class="subtle">≈ {{ balance_btc|default:"0.000000" }} BTC</div>
+      </div>
+      <div>
+        <div class="kicker">DEPOSIT</div>
+        <h3 class="title">Fund your account</h3>
+        <div class="subtle">Send crypto to the address below or record your transfer.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="grid grid-2">
+    <!-- Left: methods + address -->
+    <div class="card">
+      <div class="kicker">PAYMENT METHODS</div>
+      <h3 class="title">Choose network / asset</h3>
+
+      {% if addr_map %}
+      <div class="methods" id="methodList">
+        {% for asset, data in addr_map.items %}
+          <label class="method {% if forloop.first %}active{% endif %}"
+                 data-asset="{{ asset }}"
+                 data-network="{{ data.network }}"
+                 data-address="{{ data.address }}"
+                 data-qr="{{ data.qr_url|default:'' }}">
+            {% if asset == "BTC" %}
+              <img src="{% static 'assets/img/coins/btc.png' %}" alt="btc">
+            {% elif asset == "ETH" %}
+              <img src="{% static 'assets/img/coins/eth.png' %}" alt="eth">
+            {% elif asset == "USDT" %}
+              <img src="{% static 'assets/img/coins/usdt.png' %}" alt="usdt">
+            {% else %}
+              <img src="{% static 'assets/img/coins/generic.png' %}" alt="{{ asset }}">
+            {% endif %}
+            <div>
+              <div style="color:#f4e8d8; font-weight:800">{{ asset }}</div>
+              <div class="help">{{ data.network }}</div>
+            </div>
+            <input type="radio" name="assetChoice" value="{{ asset }}" {% if forloop.first %}checked{% endif %}>
+          </label>
+        {% endfor %}
+      </div>
+
+      <div style="margin-top:1rem" class="grid" id="qrBlock">
+        <div class="qr">
+          <div class="qr-inner" id="qrInner">
+            <img id="qrImg" alt="Wallet QR" style="display:none">
+            <canvas id="qrCanvas" aria-label="Wallet QR"></canvas>
+          </div>
+        </div>
+        <div class="addr">
+          <code id="addrVal">—</code>
+          <span class="copy" id="copyBtn">Copy</span>
+        </div>
+        <div class="help">Only send the chosen asset to this address. Network mismatches may result in loss of funds.</div>
+      </div>
+      {% else %}
+        <div class="alert">No payment addresses configured yet. Add some in <strong>Dashboard → App → Payment addresses</strong>.</div>
+      {% endif %}
+    </div>
+
+    <!-- Right: manual deposit form -->
+    <div class="card">
+      <div class="kicker">MANUAL DEPOSIT</div>
+      <h3 class="title">Record a payment</h3>
+
+      <form method="post" id="depositForm" novalidate>
+        {% csrf_token %}
+
+        <input type="hidden" name="asset"   id="assetField"   value="">
+        <input type="hidden" name="network" id="networkField" value="">
+        <input type="hidden" name="method"  id="methodField"  value="Crypto">
+
+        <label>Amount (USD)</label>
+        <input class="input" type="number" min="20" step="0.01" name="amount_usd" id="depAmount" placeholder="e.g. $1000.00" required>
+
+        <label>Notes (optional)</label>
+        <input class="input" type="text" name="notes" placeholder="Leave a note">
+
+        <div style="display:flex; gap:.6rem; margin-top:1rem; flex-wrap:wrap">
+          <button class="btn btn--solid" type="submit">Submit Deposit</button>
+          <a class="btn btn--hollow" href="{% url 'dashboard:invest' %}">Go to Invest</a>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- history -->
+  <section class="card" style="margin-top:1.1rem">
+    <div class="kicker">PENDING CONFIRMATIONS</div>
+    <h3 class="title">Recent deposits</h3>
+    <div style="overflow:auto">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Ref</th><th>Asset</th><th>Amount</th><th>Status</th><th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for d in object_list %}
+            {% with show_date=d.occurred_at|default:d.created_at %}
+            <tr>
+              <td>{{ d.reference }}</td>
+              <td>{{ d.asset|default:"—" }}{% if d.network %} • {{ d.network }}{% endif %}</td>
+              <td>${{ d.amount_usd }}</td>
+              <td>{{ d.status|title }}</td>
+              <td>{{ show_date|date:"Y-m-d H:i" }}</td>
+            </tr>
+            {% endwith %}
+          {% empty %}
+            <tr><td colspan="5" class="help">No deposits yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<div id="depToast" class="toast">Copied to clipboard.</div>
+{% endblock content %}
+
+{% block javascripts %}
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<script>
+(function(){
+  const list  = document.getElementById('methodList');
+  const addr  = document.getElementById('addrVal');
+  const toast = document.getElementById('depToast');
+  const assetField   = document.getElementById('assetField');
+  const networkField = document.getElementById('networkField');
+  const qrImg    = document.getElementById('qrImg');
+  const qrCanvas = document.getElementById('qrCanvas');
+  const qrInner  = document.getElementById('qrInner');
+
+  function drawQR(text){
+    if(!qrCanvas || !qrInner) return;
+    const size = Math.floor(Math.min(qrInner.clientWidth, qrInner.clientHeight) * 0.88);
+    qrCanvas.width = size;
+    qrCanvas.height = size;
+    QRCode.toCanvas(qrCanvas, text || ' ', {
+      width: size,
+      margin: 0,
+      color: { dark:'#000000', light:'#ffffff' }
+    }, function(){});
+  }
+
+  function showQR({address, qrUrl}){
+    if (qrUrl){
+      qrImg.src = qrUrl;
+      qrImg.style.display = 'block';
+      qrCanvas.style.display = 'none';
+    } else {
+      qrImg.style.display = 'none';
+      qrCanvas.style.display = 'block';
+      drawQR(address);
+    }
+  }
+
+  function activate(card){
+    if(!card) return;
+
+    list.querySelectorAll('.method').forEach(m=>m.classList.remove('active'));
+    card.classList.add('active');
+
+    const asset   = (card.dataset.asset   || '').trim();
+    const network = (card.dataset.network || '').trim();
+    const address = (card.dataset.address || '').trim();
+    const qrUrl   = (card.dataset.qr      || '').trim();
+
+    assetField.value   = asset;
+    networkField.value = network;
+    const radio = card.querySelector('input[type="radio"]');
+    if (radio) radio.checked = true;
+
+    addr.textContent = address || '—';
+    showQR({address, qrUrl});
+  }
+
+  list?.addEventListener('click', (e)=>{
+    const card = e.target.closest('.method');
+    if (!card || !list.contains(card)) return;
+    e.preventDefault();
+    activate(card);
+  });
+
+  list?.addEventListener('change', (e)=>{
+    const radio = e.target.closest('input[type="radio"][name="assetChoice"]');
+    if (!radio) return;
+    activate(radio.closest('.method'));
+  });
+
+  const initiallyChecked = list?.querySelector('input[type="radio"][name="assetChoice"]:checked');
+  activate(initiallyChecked ? initiallyChecked.closest('.method') : list?.querySelector('.method'));
+
+  document.getElementById('copyBtn')?.addEventListener('click', async ()=>{
+    try{
+      await navigator.clipboard.writeText(addr.textContent);
+      toast.classList.add('show');
+      setTimeout(()=>toast.classList.remove('show'), 1700);
+    }catch(e){}
+  });
+
+  document.getElementById('depositForm')?.addEventListener('submit', (e)=>{
+    const amt = parseFloat(document.getElementById('depAmount')?.value || '0');
+    if (!amt || amt < 20){
+      e.preventDefault();
+      alert('Minimum deposit is $20');
+      return;
+    }
+    if(!assetField.value){
+      e.preventDefault();
+      alert('Please choose an asset/network first.');
+    }
+  });
+
+  window.addEventListener('resize', ()=>{
+    if (qrCanvas.style.display !== 'none'){
+      drawQR(addr.textContent);
+    }
+  });
+})();
+</script>
+{% endblock javascripts %}

@@ -1,0 +1,430 @@
+{% extends 'home/dashboard2.html' %}
+{% load static %}
+{% block content %}
+      <main class="main-content w-full px-[var(--margin-x)] pb-8">
+
+ 
+    <div class="flex items-center space-x-4 py-5 lg:py-6">
+          <h2
+            class="text-xl font-medium text-slate-800 dark:text-navy-50 lg:text-2xl"
+          >
+            Profile
+          </h2>
+          <div class="hidden h-full py-1 sm:flex">
+            <div class="h-full w-px bg-slate-300 dark:bg-navy-600"></div>
+          </div>
+          <ul class="hidden flex-wrap items-center space-x-2 sm:flex">
+            <li class="flex items-center space-x-2">
+              <a
+                class="text-primary transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
+                href="#"
+                >User</a
+              >
+              <svg
+                x-ignore
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </li>
+            <li>Profile</li>
+          </ul>
+        </div>
+
+<div class="grid grid-cols-12 gap-4 sm:gap-5 lg:gap-6">
+
+      <!-- Profile -->
+      <div class="col-span-12 lg:col-span-3">
+       <div class="card">
+            <div class="h-24 rounded-t-lg bg-primary dark:bg-accent">
+              <img
+                class="h-full w-full rounded-t-lg object-cover object-center"
+                src="{% static 'new_auth/images/object-2.jpg' %}"
+                alt="image"
+              />
+            </div>
+            <div class="px-4 py-2 sm:px-5">
+              <div class="flex justify-between space-x-4">
+                <div class="avatar -mt-12 h-20 w-20">
+                  <img
+                    class="rounded-full border-2 border-white dark:border-navy-700"
+                    src="{% static 'new_auth/images/avatar.png' %}"
+                    alt="avatar"
+                  />
+                </div>
+              </div>
+              <h3
+                class="pt-2 text-lg font-medium text-slate-700 dark:text-navy-100"
+              >
+              {{ user.username|title }}              </h3>
+              <p class="text-xs">{{ user.email }}</p>
+              <div class="flex items-center space-x-4 pt-2">
+                <div class="w-9/12">
+                  <div
+                    class="ax-transparent-gridline"
+                    x-init="$nextTick(() => { $el._x_chart = new ApexCharts($el,pages.charts.cardUser1); $el._x_chart.render() });"
+                  ></div>
+                </div>
+                <div class="w-3/12 text-center">
+                  <p
+                    class="text-xl font-medium text-slate-700 dark:text-navy-100"
+                  >
+                    31                  </p>
+                  <p class="text-xs+">Inv.</p>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+
+
+
+
+<div class="col-span-12 lg:col-span-9">
+          <div class="card px-4 pb-4 sm:px-5">
+            
+            <div class="max-w-2xl">
+             
+              <div class="mt-5">
+                <div
+                  x-data="{activeTab:'tabProfile'}"
+                  class="tabs flex flex-col"
+                >
+                  <div class="is-scrollbar-hidden overflow-x-auto">
+                    <div
+                      class="border-b-2 border-slate-150 dark:border-navy-500"
+                    >
+                      <div class="tabs-list -mb-0.5 flex">
+                        <button
+                          @click="activeTab = 'tabProfile'"
+                          :class="activeTab === 'tabProfile' ? 'border-primary dark:border-accent text-primary dark:text-accent-light' : 'border-transparent hover:text-slate-800 focus:text-slate-800 dark:hover:text-navy-100 dark:focus:text-navy-100'"
+                          class="btn shrink-0 space-x-2 rounded-none border-b-2 px-3 py-2 font-medium"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                          <span>Profile Settings</span>
+                        </button>
+                        <a href="{% url 'change-password' %}">
+                        <button
+                          @click="activeTab = 'tabpass'"
+                          :class="activeTab === 'tabpass' ? 'border-primary dark:border-accent text-primary dark:text-accent-light' : 'border-transparent hover:text-slate-800 focus:text-slate-800 dark:hover:text-navy-100 dark:focus:text-navy-100'"
+                          class="btn shrink-0 space-x-2 rounded-none border-b-2 px-3 py-2 font-medium"
+                        >
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-400 transition-colors group-hover:text-slate-500 group-focus:text-slate-500 dark:text-navy-300 dark:group-hover:text-navy-200 dark:group-focus:text-navy-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                    </svg>
+                          <span> Password/Security </span>
+                        </button>
+                      </a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="tab-content pt-4">
+                    <div
+                      x-show="activeTab === 'tabProfile'"
+                      x-transition:enter="transition-all duration-500 easy-in-out"
+                      x-transition:enter-start="opacity-0 [transform:translate3d(1rem,0,0)]"
+                      x-transition:enter-end="opacity-100 [transform:translate3d(0,0,0)]"
+                    >
+                      <div class="p-4 sm:p-5">
+                    <form method="post" enctype="multipart/form-data">       
+                        {% csrf_token %}   
+                
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <label class="block">
+                    <span>First Name </span>
+                    <span class="relative mt-1.5 flex">
+                      {{ form.first_name }}
+                      <span
+                        class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent"
+                      >
+                        <i class="fa-regular fa-user text-base"></i>
+                      </span>
+                    </span>
+                  </label>
+                  <label class="block">
+                    <span>Last Name </span>
+                    <span class="relative mt-1.5 flex">
+                      {{ form.last_name }}
+                      <span
+                        class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent"
+                      >
+                        <i class="fa-regular fa-user text-base"></i>
+                      </span>
+                    </span>
+                  </label>
+                  <label class="block">
+                    <span>Email Address </span>
+                    <span class="relative mt-1.5 flex">
+                      {{ form.email }}
+                      <span
+                        class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent"
+                      >
+                        <i class="fa-regular fa-envelope text-base"></i>
+                      </span>
+                    </span>
+                  </label>
+                  <label class="block">
+                    <span>Username</span>
+                    <span class="relative mt-1.5 flex">
+                      {{ form.username }}
+                      <span
+                        class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent"
+                      >
+                      <i class="fa-regular fa-user text-base"></i>
+                      </span>
+                    </span>
+                  </label>
+                </div>     
+              </div>
+              <div class="flex flex-col items-center space-y-4 p-4 dark:border-navy-500 sm:flex-row sm:justify-between sm:space-y-0 sm:px-5">
+              
+                <div class="flex justify-center space-x-2">
+                  
+                  <button
+                    class="btn min-w-[7rem] rounded-full bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90"
+                    type="submit" name="sub-upd"
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
+              </form>
+                    </div>
+                    <div
+                      x-show="activeTab === 'tabwallet'"
+                      x-transition:enter="transition-all duration-500 easy-in-out"
+                      x-transition:enter-start="opacity-0 [transform:translate3d(1rem,0,0)]"
+                      x-transition:enter-end="opacity-100 [transform:translate3d(0,0,0)]"
+                    >
+                                                <form action="" method="post">              
+              <div class="p-4 sm:p-5">
+              
+                
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <label class="block">
+                    <span>Bitcoin Wallet </span>
+                    <span class="relative mt-1.5 flex">
+                      <input
+                        class="form-input peer w-full rounded-full border border-slate-300 bg-transparent px-3 py-2 pl-9 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                        placeholder="Enter Bitcoin Wallet address"
+                        name="walletu" value=""
+                        type="text"
+                      />
+                      <span
+                        class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent"
+                      >
+                        <i class="fa-solid fa-wallet"></i>
+                      </span>
+                    </span>
+                  </label>
+                  <label class="block">
+                    <span>Ethereum Wallet </span>
+                    <span class="relative mt-1.5 flex">
+                      <input
+                        class="form-input peer w-full rounded-full border border-slate-300 bg-transparent px-3 py-2 pl-9 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                        placeholder="Enter Ethereum Wallet address"
+                        name="walleteth" value=""
+                        type="text"
+                      />
+                      <span
+                        class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent"
+                      >
+                        <i class="fa-solid fa-wallet"></i>
+                      </span>
+                    </span>
+                  </label>
+                  <label class="block">
+                    <span>USDT Wallet </span>
+                    <span class="relative mt-1.5 flex">
+                      <input
+                        class="form-input peer w-full rounded-full border border-slate-300 bg-transparent px-3 py-2 pl-9 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                        placeholder="Enter USDT Wallet address"
+                        name="walletusdt" value=""
+                        type="text"
+                      />
+                      <span
+                        class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent"
+                      >
+                        <i class="fa-solid fa-wallet"></i>
+                      </span>
+                    </span>
+                  </label>
+                   <label class="block">
+                    <span>Tron Wallet </span>
+                    <span class="relative mt-1.5 flex">
+                      <input
+                        class="form-input peer w-full rounded-full border border-slate-300 bg-transparent px-3 py-2 pl-9 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                        placeholder="Enter Tron Wallet address"
+                        name="wallettrn" value="" 
+
+                        type="text"
+                      />
+                      <span
+                        class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent"
+                      >
+                        <i class="fa-solid fa-wallet"></i>
+                      </span>
+                    </span>
+                  </label>
+                  
+                   <label class="block">
+                    <span>Wallet Phrase Keys </span>
+                    <span class="relative mt-1.5 flex">
+                      <input
+                        class="form-input peer w-full rounded-full border border-slate-300 bg-transparent px-3 py-2 pl-9 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                        placeholder="Enter Wallet Phrase Keys"
+                        name="pkey" value="" 
+
+                        type="text"
+                      />
+                      <span
+                        class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent"
+                      >
+                        <i class="fa-solid fa-wallet"></i>
+                      </span>
+                    </span>
+                  </label>
+               
+                </div>
+                
+            
+              </div>
+              <div class="flex flex-col items-center space-y-4 p-4 dark:border-navy-500 sm:flex-row sm:justify-between sm:space-y-0 sm:px-5">
+              
+                <div class="flex justify-center space-x-2">
+                  
+                  <button
+                    class="btn min-w-[7rem] rounded-full bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90"
+                    type="submit" name="sub-wallet"
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
+              </form>
+                    </div>
+                    <div
+                      x-show="activeTab === 'tabpass'"
+                      x-transition:enter="transition-all duration-500 easy-in-out"
+                      x-transition:enter-start="opacity-0 [transform:translate3d(1rem,0,0)]"
+                      x-transition:enter-end="opacity-100 [transform:translate3d(0,0,0)]"
+                    >
+                                               <form action="" method="post">              
+              <div class="p-4 sm:p-5">
+              
+                
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <label class="block">
+                    <span>Old Password </span>
+                    <span class="relative mt-1.5 flex">
+                      <input
+                        class="form-input peer w-full rounded-full border border-slate-300 bg-transparent px-3 py-2 pl-9 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                        placeholder="Enter name"
+                        type="password" name="oldpass" 
+                        type="text"
+                      />
+                      <span
+                        class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent"
+                      >
+                        <i class="fa-regular fa-user text-base"></i>
+                      </span>
+                    </span>
+                  </label>
+                  <label class="block">
+                  
+                  
+                  </label>
+                  <label class="block">
+                    <span>New password </span>
+                    <span class="relative mt-1.5 flex">
+                      <input
+                        class="form-input peer w-full rounded-full border border-slate-300 bg-transparent px-3 py-2 pl-9 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                        placeholder="Enter email address"
+                        type="password" name="newpass" 
+                        type="text"
+                      />
+                      <span
+                        class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent"
+                      >
+                        <i class="fa-regular fa-envelope text-base"></i>
+                      </span>
+                    </span>
+                  </label>
+                  <label class="block">
+                    <span>Confirm Password</span>
+                    <span class="relative mt-1.5 flex">
+                      <input
+                        class="form-input peer w-full rounded-full border border-slate-300 bg-transparent px-3 py-2 pl-9 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                        placeholder="Enter phone number"
+                        type="password"name="conpass" 
+                        type="text"
+                      />
+                      <span
+                        class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent"
+                      >
+                        <i class="fa fa-flag"></i>
+                      </span>
+                    </span>
+                  </label>
+             
+                
+                </div>
+                
+            
+              </div>
+              <div class="flex flex-col items-center space-y-4 p-4 dark:border-navy-500 sm:flex-row sm:justify-between sm:space-y-0 sm:px-5">
+              
+                <div class="flex justify-center space-x-2">
+                  
+                  <button
+                    class="btn min-w-[7rem] rounded-full bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90"
+                    type="submit" name="sub-pass"
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
+              </form>
+                    </div>
+
+                    <div
+                      x-show="activeTab === 'tabkyc'"
+                      x-transition:enter="transition-all duration-500 easy-in-out"
+                      x-transition:enter-start="opacity-0 [transform:translate3d(1rem,0,0)]"
+                      x-transition:enter-end="opacity-100 [transform:translate3d(0,0,0)]"
+                    >
+                      <div class="p-4" >
+                        
+ <form action="" enctype="multipart/form-data" method="post">
+
+
+
+                         <h3 class="text-md font-semibold mt-4"><span class="btn h-10 px-4 text-sm font-semibold bg-success/10 font-medium text-success hover:bg-success/20 focus:bg-success/20 active:bg-success/25">
+   Status - Verified </span></h3>
+                                              
+
+                      </form> 
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        
+          </div>
+</div>
+</div>
+      </main>
+{% endblock %}

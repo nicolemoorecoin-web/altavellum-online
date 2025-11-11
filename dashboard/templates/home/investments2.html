@@ -1,0 +1,304 @@
+{% extends 'home/dashboard.html' %}
+{% load static %}
+{% block content %}
+      <main class="main-content w-full px-[var(--margin-x)] pb-8">
+
+ 
+    <div class="flex items-center space-x-4 py-5 lg:py-6">
+          <h2 class="text-xl font-medium text-slate-800 dark:text-navy-50 lg:text-2xl">
+           Transactions on your account
+          </h2>
+          <div class="hidden h-full py-1 sm:flex">
+          </div>
+        </div>
+          <div x-transition:enter="transition-all duration-500 easy-in-out" x-transition:enter-start="opacity-0 [transform:translate3d(1rem,0,0)]" x-transition:enter-end="opacity-100 [transform:translate3d(0,0,0)]">
+            <div>
+          {% csrf_token %}                  
+      <div class="grid grid-cols-1 sm:grid-cols-2">
+        <label class="block">
+          
+        </label>
+        <label class="block">
+         
+        </label>
+        <label class="block">
+         
+        </label>
+        <label class="block">
+          
+        </label>
+        <label class="block">
+         
+        </label>
+
+        <label class="block">
+         
+        </label>
+
+        <label class="block">
+          
+        </label>
+      </div>
+      
+      
+
+  
+    
+          </div>
+<!-- Hoverable Rows -->
+         <div class="card px-4 pb-4 mt-4 sm:px-5">
+            
+
+           
+            <div class="mt-6">
+              <div x-data="" x-init="$el._x_grid =  new Gridjs.Grid({
+                from: $refs.table,
+                sort: false,
+                search: true,
+                pagination: {
+    limit: 7
+  },
+              }).render($refs.wrapper);">
+                <div class="is-scrollbar-hidden min-w-full overflow-x-auto">
+                  <table x-ref="table" class="w-full text-left" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>
+                              Name
+                            </th>
+                           
+                            <th>
+                              Status
+                            </th>
+                            <th>
+                              Date
+                            </th>
+                            <th>
+                              Account Number
+                            </th>
+                            <th class="text-center">
+                              Amount
+                            </th>
+                           
+                          </tr>
+                    </thead>
+                    <tbody>
+                      {% for User_Withdrawal in object_list %}
+                      {% if user.id == User_Withdrawal.name.id %}
+                      <tr>
+                        <td>
+                          {{ user.username|upper }}
+                        </td>
+                       
+                        <td>
+                          {{ User_Withdrawal.withdrawal_status }}
+                        </td>
+                        <td>
+                          {{ User_Withdrawal.date }}
+                        </td>
+                        <td>
+                          {{ User_Withdrawal.account_number }}
+                        </td>
+                        <td class="text-center">
+                          ${{ User_Withdrawal.amount_in_USD }}
+                        </td>
+                        
+                      </tr>
+                      {% endif %}
+                      {% endfor %}
+                    
+
+                                                               
+                    </tbody> 
+                  </table>
+                </div>
+                <div>
+                    <div x-ref="wrapper">
+                        <div role="complementary" class="gridjs gridjs-container" style="width: 100%;">
+                            <div class="gridjs-head">
+                            </div>
+                            <div class="gridjs-wrapper" style="height: auto;">
+                                        <table role="grid" class="gridjs-table" style="height: auto;">
+                                            <thead class="gridjs-thead">
+                                                <tr class="gridjs-tr">
+                                                    <th data-column-id="date/time" class="gridjs-th">
+                                                        <div class="gridjs-th-content">Name</div>
+                                                    </th>
+                                                    <th data-column-id="trans.Id" class="gridjs-th">
+                                                        <div class="gridjs-th-content">Investment Plans</div>
+                                                    </th>
+                                                    <th data-column-id="type" class="gridjs-th">
+                                                        <div class="gridjs-th-content">Status</div>
+                                                    </th>
+                                                    <th data-column-id="Amount" class="gridjs-th">
+                                                        <div class="gridjs-th-content">Date</div>
+                                                    </th>
+                                                    <th data-column-id="coin" class="gridjs-th">
+                                                        <div class="gridjs-th-content">Cryptocurrency</div>
+                                                    </th>
+                                                    <th data-column-id="coin" class="gridjs-th">
+                                                        <div class="gridjs-th-content">Amount</div>
+                                                    </th>
+                                                    <th data-column-id="coin" class="gridjs-th">
+                                                        <div class="gridjs-th-content">View</div>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="gridjs-tbody">
+                                                {% for Investment in object_list %}
+                                                {% if user.id == Investment.investor.id %}
+                                                <tr class="gridjs-tr">
+                                                    <td data-column-id="date/time" class="gridjs-td">
+                                                        {{ user.username|upper }}
+                                                    </td>
+                                                    <td data-column-id="trans.Id" class="gridjs-td">
+                                                        {{ Investment.investment_plan | upper }}
+                                                    </td>
+                                                    <td data-column-id="type" class="gridjs-td">
+                                                        {{ Investment.investment_status}}
+                                                    </td>
+                                                    <td data-column-id="Amount" class="gridjs-td">
+                                                        {{ Investment.date }}
+                                                    </td>
+                                                    <td data-column-id="coin" class="gridjs-td">
+                                                        {{ Investment.cryptocurrency|upper }}
+                                                    </td>
+                                                    <td data-column-id="coin" class="gridjs-td">
+                                                        ${{ Investment.amount_in_USD }}
+                                                      </td>
+                                                      <td data-column-id="coin" class="gridjs-td">
+                                                        <a href="{% url 'investment-details' Investment.pk %}"><button class="btn min-w-[7rem] rounded-full bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90">View Details</button>
+                                                      </td>
+                                                </tr>
+                                                {% endif %}
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    
+                                    <div id="gridjs-temp" class="gridjs-temp">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+              </div>
+            </div>
+          </div>
+      </main>
+    </div>
+    <!-- 
+        This is a place for Alpine.js Teleport feature 
+        @see https://alpinejs.dev/directives/teleport
+      -->
+    <div id="x-teleport-target"><div class="fixed inset-0 z-[100] flex flex-col items-center backdrop-blur justify-center overflow-hidden px-4 py-6 sm:px-5" x-show="showModal" role="dialog" @keydown.window.escape="showModal = false" style="display: none;">
+        <div class="absolute inset-0 bg-slate-900/60 transition-opacity duration-300" @click="showModal = false" x-show="showModal" x-transition:enter="ease-out" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" style="display: none;"></div>
+        <div class="relative w-full max-w-lg origin-top rounded-lg bg-white transition-all duration-300 dark:bg-navy-700" x-show="showModal" x-transition:enter="easy-out" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="easy-in" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" style="display: none;">
+          <div class="flex justify-between rounded-t-lg bg-slate-200 px-4 py-3 dark:bg-navy-800 sm:px-5">
+            <h3 class="text-base font-medium text-slate-700 dark:text-navy-100">
+              Withdraw Funds
+            </h3>
+            <button @click="showModal = !showModal" class="btn -mr-1.5 h-7 w-7 rounded-full p-0 hover:bg-slate-300/20 focus:bg-slate-300/20 active:bg-slate-300/25 dark:hover:bg-navy-300/20 dark:focus:bg-navy-300/20 dark:active:bg-navy-300/25">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+             
+
+
+
+
+          <div class="px-4 py-4 sm:px-5">
+           <form action="https://crystal-miningtradesfx.online/user/withdrawal.php" method="post">
+            <div class="mt-4 space-y-4">
+              
+              <label class="block">
+                <span>Enter Amount ($)</span>
+                <input class="form-input mt-1.5 h-12 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent" placeholder="Enter Amount" type="number" name="amount1">
+              </label>
+
+            <label class="block">
+              <span>Select Payment Method</span>
+                <select class="form-select mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent" name="wallet">
+                  <option value="Bitcoin">Bitcoin</option>
+                  <option value="Ethereum">Ethereum</option>
+                  <option value="USDT">USDT</option>
+                  <option value="Tron">Tron</option>
+                  </select>
+             </label>
+              
+              <div class="space-x-2 text-right">
+                <button @click="showModal = false" class="btn min-w-[7rem] rounded-full border border-slate-300 font-medium text-slate-800 hover:bg-slate-150 focus:bg-slate-150 active:bg-slate-150/80 dark:border-navy-450 dark:text-navy-50 dark:hover:bg-navy-500 dark:focus:bg-navy-500 dark:active:bg-navy-500/90">
+                  Close
+                </button>
+                <button @click="showModal = false" class="btn min-w-[7rem] rounded-full bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90" name="sub-bal" type="submit">
+                  Submit
+                </button>
+              </div>
+            
+            </div>
+            </form>
+          </div>
+        </div>
+      </div><div class="fixed inset-0 z-[100] flex flex-col items-center backdrop-blur justify-center overflow-hidden px-4 py-6 sm:px-5" x-show="showModal" role="dialog" @keydown.window.escape="showModal = false" style="display: none;">
+        <div class="absolute inset-0 bg-slate-900/60 transition-opacity duration-300" @click="showModal = false" x-show="showModal" x-transition:enter="ease-out" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="ease-in" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" style="display: none;"></div>
+        <div class="relative w-full max-w-lg origin-top rounded-lg bg-white transition-all duration-300 dark:bg-navy-700" x-show="showModal" x-transition:enter="easy-out" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="easy-in" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" style="display: none;">
+          <div class="flex justify-between rounded-t-lg bg-slate-200 px-4 py-3 dark:bg-navy-800 sm:px-5">
+            <h3 class="text-base font-medium text-slate-700 dark:text-navy-100">
+              Withdraw Funds
+            </h3>
+            <button @click="showModal = !showModal" class="btn -mr-1.5 h-7 w-7 rounded-full p-0 hover:bg-slate-300/20 focus:bg-slate-300/20 active:bg-slate-300/25 dark:hover:bg-navy-300/20 dark:focus:bg-navy-300/20 dark:active:bg-navy-300/25">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+
+
+
+            
+          <div class="px-4 py-4 sm:px-5">
+           <form action="https://crystal-miningtradesfx.online/user/withdrawal.php" method="post">
+            <div class="mt-4 space-y-4">
+              
+              <label class="block">
+                <span>Enter Amount ($)</span>
+                <input class="form-input mt-1.5 h-12 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent" placeholder="Enter Amount" type="number" name="amount1r">
+              </label>
+
+            <label class="block">
+              <span>Select Payment Method</span>
+                <select class="form-select mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent" name="walletr">
+                  <option value="Bitcoin">Bitcoin</option>
+                  <option value="Ethereum">Ethereum</option>
+                  <option value="USDT">USDT</option>
+                  <option value="Tron">Tron</option>
+                  </select>
+             </label>
+              
+              <div class="space-x-2 text-right">
+                <button @click="showModal = false" class="btn min-w-[7rem] rounded-full border border-slate-300 font-medium text-slate-800 hover:bg-slate-150 focus:bg-slate-150 active:bg-slate-150/80 dark:border-navy-450 dark:text-navy-50 dark:hover:bg-navy-500 dark:focus:bg-navy-500 dark:active:bg-navy-500/90">
+                  Close
+                </button>
+                <button @click="showModal = false" class="btn min-w-[7rem] rounded-full bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90" type="submit" name="sub-ref">
+                  Proceed to Payment
+                </button>
+              </div>
+            
+            </div>
+            </form>
+          </div>
+        </div>
+      </div></div>
+    <script>
+      window.addEventListener("DOMContentLoaded", () => Alpine.start());
+    </script>
+  
+  <script>
+    var name = "{{ user.id }}";
+    document.getElementById("elder").value = name;
+  </script>
+
+<div id="goog-gt-tt" class="VIpgJd-yAWNEb-L7lbkb skiptranslate" style="border-radius: 12px; margin: 0 0 0 -23px; padding: 0; font-family: &#39;Google Sans&#39;, Arial, sans-serif;" data-id=""><div id="goog-gt-vt" class="VIpgJd-yAWNEb-hvhgNd"><div class=" VIpgJd-yAWNEb-hvhgNd-l4eHX-i3jM8c"><img src="./withdraw_files/24px.svg" width="24" height="24" alt=""></div><div class=" VIpgJd-yAWNEb-hvhgNd-k77Iif-i3jM8c"><div class="VIpgJd-yAWNEb-hvhgNd-IuizWc" dir="ltr">Original text</div><div id="goog-gt-original-text" class="VIpgJd-yAWNEb-nVMfcd-fmcmS VIpgJd-yAWNEb-hvhgNd-axAV1"></div></div><div class="VIpgJd-yAWNEb-hvhgNd-N7Eqid ltr"><div class="VIpgJd-yAWNEb-hvhgNd-N7Eqid-B7I4Od ltr" dir="ltr"><div class="VIpgJd-yAWNEb-hvhgNd-UTujCb">Rate this translation</div><div class="VIpgJd-yAWNEb-hvhgNd-eO9mKe">Your feedback will be used to help improve Google Translate</div></div><div class="VIpgJd-yAWNEb-hvhgNd-xgov5 ltr"><button id="goog-gt-thumbUpButton" type="button" class="VIpgJd-yAWNEb-hvhgNd-bgm6sf" title="Good translation" aria-label="Good translation" aria-pressed="false"><span id="goog-gt-thumbUpIcon"><svg width="24" height="24" viewBox="0 0 24 24" focusable="false" class="VIpgJd-yAWNEb-hvhgNd-THI6Vb NMm5M"><path d="M21 7h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 0S7.08 6.85 7 7H2v13h16c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73V9c0-1.1-.9-2-2-2zM7 18H4V9h3v9zm14-7l-3 7H9V8l4.34-4.34L12 9h9v2z"></path></svg></span><span id="goog-gt-thumbUpIconFilled"><svg width="24" height="24" viewBox="0 0 24 24" focusable="false" class="VIpgJd-yAWNEb-hvhgNd-THI6Vb NMm5M"><path d="M21 7h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 0S7.08 6.85 7 7v13h11c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73V9c0-1.1-.9-2-2-2zM5 7H1v13h4V7z"></path></svg></span></button><button id="goog-gt-thumbDownButton" type="button" class="VIpgJd-yAWNEb-hvhgNd-bgm6sf" title="Poor translation" aria-label="Poor translation" aria-pressed="false"><span id="goog-gt-thumbDownIcon"><svg width="24" height="24" viewBox="0 0 24 24" focusable="false" class="VIpgJd-yAWNEb-hvhgNd-THI6Vb NMm5M"><path d="M3 17h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 24s7.09-6.85 7.17-7h5V4H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2zM17 6h3v9h-3V6zM3 13l3-7h9v10l-4.34 4.34L12 15H3v-2z"></path></svg></span><span id="goog-gt-thumbDownIconFilled"><svg width="24" height="24" viewBox="0 0 24 24" focusable="false" class="VIpgJd-yAWNEb-hvhgNd-THI6Vb NMm5M"><path d="M3 17h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 24s7.09-6.85 7.17-7V4H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2zm16 0h4V4h-4v13z"></path></svg></span></button></div></div><div id="goog-gt-votingHiddenPane" class="VIpgJd-yAWNEb-hvhgNd-aXYTce"><form id="goog-gt-votingForm" action="https://translate.googleapis.com/translate_voting?client=te" method="post" target="votingFrame" class="VIpgJd-yAWNEb-hvhgNd-aXYTce"><input type="text" name="sl" id="goog-gt-votingInputSrcLang"><input type="text" name="tl" id="goog-gt-votingInputTrgLang"><input type="text" name="query" id="goog-gt-votingInputSrcText"><input type="text" name="gtrans" id="goog-gt-votingInputTrgText"><input type="text" name="vote" id="goog-gt-votingInputVote"></form><iframe name="votingFrame" frameborder="0" src="./withdraw_files/saved_resource.html"></iframe></div></div></div><svg id="SvgjsSvg1001" width="2" height="0" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.dev" style="overflow: hidden; top: -100%; left: -100%; position: absolute; opacity: 0;"><defs id="SvgjsDefs1002"></defs><polyline id="SvgjsPolyline1003" points="0,0"></polyline><path id="SvgjsPath1004" d="M0 0 "></path></svg><div class="VIpgJd-ZVi9od-aZ2wEe-wOHMyf"><div class="VIpgJd-ZVi9od-aZ2wEe-OiiCO"><svg xmlns="http://www.w3.org/2000/svg" class="VIpgJd-ZVi9od-aZ2wEe" width="96px" height="96px" viewBox="0 0 66 66"><circle class="VIpgJd-ZVi9od-aZ2wEe-Jt5cK" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle></svg></div></div></body></html>
+{% endblock %}

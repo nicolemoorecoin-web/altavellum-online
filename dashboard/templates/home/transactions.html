@@ -1,0 +1,348 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+{% block title %}All Transactions{% endblock %}
+
+{% block stylesheets %}
+<style>
+/* ====== TRANSACTIONS PAGE (matches your withdraw page theme) ====== */
+:root{
+  --bg:#0f1a23; --panel:#0e1b24; --ring:rgba(255,255,255,.12);
+  --ink:#d2a16d; --muted:#9fb0be; --text:#e9eef2; --accent:#b07131; --accent-ink:#1f1914;
+  --ok:#64d394; --warn:#e9cf6d; --bad:#ff7b7b; --info:#67b7ff;
+}
+.page{background:var(--bg); min-height:calc(100vh - 80px); padding:1.25rem 1rem 3rem}
+@media (min-width:992px){ .page{padding:2rem 2rem 4rem} }
+.card{background:var(--panel); border:1px solid var(--ring); border-radius:22px; padding:1.25rem; box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.kicker{color:#9fb0be; letter-spacing:.18em; font-size:.8rem; font-weight:800}
+.h1{font-size:1.25rem; font-weight:900; color:#f4e8d8; letter-spacing:.05em}
+.subtle{color:var(--muted); font-weight:700}
+
+.grid{display:grid; gap:1rem}
+@media (min-width:992px){ .grid-3{grid-template-columns:repeat(3,1fr)} .grid-2{grid-template-columns:1fr 2fr} }
+
+.badge{font-size:.75rem; padding:.2rem .55rem; border-radius:999px; border:1px solid var(--ring); background:rgba(255,255,255,.06); color:#e9eef2}
+.stat{display:flex; align-items:center; justify-content:space-between; padding:1rem; border:1px solid var(--ring); border-radius:18px}
+.stat b{color:#fff; font-size:1.2rem}
+
+.filters{display:flex; gap:.6rem; flex-wrap:wrap; align-items:center}
+.input, select{
+  background:#0a141b; border:1px solid var(--ring); color:#e9eef2; border-radius:12px;
+  padding:.6rem .8rem; outline:none; min-width:130px
+}
+.input--search{min-width:220px}
+.btn{display:inline-flex; align-items:center; gap:.5rem; border-radius:12px; padding:.6rem 1rem; font-weight:900; letter-spacing:.3px; cursor:pointer; border:2px solid transparent}
+.btn--solid{background:var(--accent); color:var(--accent-ink); border-color:rgba(0,0,0,.3)}
+.btn--hollow{background:transparent; color:#e9eef2; border-color:rgba(255,255,255,.18)}
+
+.table{width:100%; border-collapse:separate; border-spacing:0 10px}
+.table th{color:#cfd8df; font-weight:800; text-align:left; padding:.5rem .75rem}
+.table td{background:#0a141b; border:1px solid var(--ring); color:#e9eef2; padding:.8rem .9rem; vertical-align:middle}
+.table tr td:first-child{border-top-left-radius:12px; border-bottom-left-radius:12px}
+.table tr td:last-child{border-top-right-radius:12px; border-bottom-right-radius:12px}
+.table .mono{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
+
+.pill{padding:.25rem .6rem; border-radius:999px; font-weight:800; font-size:.75rem; letter-spacing:.03em; border:1px solid var(--ring)}
+.pill--ok{background:rgba(100,211,148,.15); color:var(--ok)}
+.pill--warn{background:rgba(233,207,109,.15); color:var(--warn)}
+.pill--bad{background:rgba(255,123,123,.15); color:var(--bad)}
+.pill--info{background:rgba(103,183,255,.15); color:var(--info)}
+
+.tools{display:flex; gap:.5rem; flex-wrap:wrap}
+.tool{font-size:.8rem; border:1px dashed var(--ring); padding:.4rem .7rem; border-radius:10px; cursor:pointer}
+.tool:hover{background:rgba(255,255,255,.04)}
+
+.pagination{display:flex; gap:.5rem; align-items:center; justify-content:flex-end; margin-top:.6rem}
+.page-btn{border:1px solid var(--ring); background:#0a141b; color:#e9eef2; padding:.4rem .7rem; border-radius:10px; cursor:pointer}
+.page-btn[disabled]{opacity:.5; cursor:not-allowed}
+
+.empty{padding:2rem 1rem; text-align:center; color:var(--muted)}
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="page">
+  <!-- Top: quick stats -->
+  <section class="card" style="margin-bottom:1rem">
+    <div class="kicker">TRANSACTIONS</div>
+    <div class="grid grid-3">
+      <div class="stat">
+        <div>
+          <div class="badge">Total Inflows</div>
+          <div class="subtle">Deposits & profits</div>
+        </div>
+        <b>${{ totals.inflows|default:"0.00" }}</b>
+      </div>
+      <div class="stat">
+        <div>
+          <div class="badge">Total Outflows</div>
+          <div class="subtle">Withdrawals & fees</div>
+        </div>
+        <b>${{ totals.outflows|default:"0.00" }}</b>
+      </div>
+      <div class="stat">
+        <div>
+          <div class="badge">Net</div>
+          <div class="subtle">Inflows − Outflows</div>
+        </div>
+        <b>${{ totals.net|default:"0.00" }}</b>
+      </div>
+    </div>
+  </section>
+
+  <!-- Filters + tools -->
+  <section class="card" style="margin-bottom:1rem">
+    <div class="grid grid-2">
+      <div class="filters">
+        <select id="category" class="input">
+          <option value="">All Categories</option>
+          <option value="deposit">Deposit</option>
+          <option value="withdrawal">Withdrawal</option>
+          <option value="investment">Investment</option>
+        </select>
+
+        <select id="status" class="input">
+          <option value="">All Status</option>
+          <option value="pending">Pending</option>
+          <option value="processing">Processing</option>
+          <option value="completed">Completed</option>
+          <option value="failed">Failed</option>
+          <option value="rejected">Rejected</option>
+        </select>
+
+        <input id="q" class="input input--search" type="search" placeholder="Search ref, asset, method, notes…">
+
+        <input id="dateFrom" class="input" type="date">
+        <input id="dateTo" class="input" type="date">
+
+        <button id="apply" class="btn btn--solid" type="button">Apply</button>
+        <button id="reset" class="btn btn--hollow" type="button">Reset</button>
+      </div>
+
+      <div class="tools" style="justify-self:end">
+        <div id="exportCsv" class="tool">Export CSV</div>
+        <div id="copyRows" class="tool">Copy Visible</div>
+        <a href="{% url 'dashboard:deposit' %}" class="tool">Go to Deposit</a>
+        <a href="{% url 'dashboard:withdraw' %}" class="tool">Go to Withdraw</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Table -->
+  <section class="card">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:.5rem">
+      <div class="h1">All activity</div>
+      <div class="subtle" id="countLabel">0 results</div>
+    </div>
+
+    <div style="overflow:auto">
+      <table class="table" id="txTable">
+        <thead>
+          <tr>
+            <th>Ref</th>
+            <th>Category</th>
+            <th>Method / Asset</th>
+            <th>Amount (USD)</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th style="min-width:120px">Notes</th>
+          </tr>
+        </thead>
+        <tbody id="txBody">
+          {% for t in object_list %}
+            <tr
+              data-category="{{ t.category|default_if_none:''|lower }}"
+              data-status="{{ t.status|default_if_none:''|lower }}"
+              data-date="{{ t.date|date:'Y-m-d' }}"
+              data-search="{{ t.reference }} {{ t.method }} {{ t.asset }} {{ t.notes }} {{ t.status }} {{ t.category }}"
+            >
+              <td class="mono">{{ t.reference|default:"—" }}</td>
+              <td>
+                {% with c=t.category|lower %}
+                  <span class="pill {% if c == 'deposit' %}pill--ok{% elif c == 'withdrawal' %}pill--info{% else %}pill--warn{% endif %}">
+                    {{ t.category|title|default:"—" }}
+                  </span>
+                {% endwith %}
+              </td>
+              <td>
+                <div style="display:flex; flex-direction:column; gap:2px">
+                  <b>{% firstof t.method t.network "—" %}</b>
+                  <span class="subtle">{% firstof t.asset t.cryptocurrency t.plan "" %}</span>
+                </div>
+              </td>
+              <td>
+                {% if t.flow == 'in' %}
+                  <b class="pill pill--ok">+ ${{ t.amount|floatformat:2 }}</b>
+                {% else %}
+                  <b class="pill pill--bad">- ${{ t.amount|floatformat:2 }}</b>
+                {% endif %}
+              </td>
+              <td>
+                {% with s=t.status|lower %}
+                  <span class="pill
+                    {% if s == 'completed' %}pill--ok{% elif s == 'pending' or s == 'processing' %}pill--warn{% else %}pill--bad{% endif %}
+                  ">{{ t.status|title }}</span>
+                {% endwith %}
+              </td>
+              <td class="mono">{{ t.date|date:"Y-m-d H:i" }}</td>
+              <td style="max-width:340px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap">{{ t.notes|default:"" }}</td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="7" class="empty">No transactions yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination (client-side) -->
+    <div class="pagination">
+      <button class="page-btn" id="prevPage" disabled>Prev</button>
+      <span class="subtle" id="pageInfo">Page 1</span>
+      <button class="page-btn" id="nextPage" disabled>Next</button>
+      <select id="perPage" class="input" style="min-width:90px">
+        <option value="10" selected>10 / page</option>
+        <option value="25">25 / page</option>
+        <option value="50">50 / page</option>
+        <option value="100">100 / page</option>
+      </select>
+    </div>
+  </section>
+</div>
+{% endblock content %}
+
+{% block javascripts %}
+<script>
+(function(){
+  const qs = s => document.querySelector(s);
+  const qsa = s => Array.from(document.querySelectorAll(s));
+  const rows = () => qsa('#txBody tr');
+
+  const category = qs('#category');
+  const status = qs('#status');
+  const search = qs('#q');
+  const dateFrom = qs('#dateFrom');
+  const dateTo = qs('#dateTo');
+  const countLabel = qs('#countLabel');
+  const perPage = qs('#perPage');
+  const pageInfo = qs('#pageInfo');
+  const prevPage = qs('#prevPage');
+  const nextPage = qs('#nextPage');
+
+  // read query params on load
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('category')) category.value = params.get('category');
+  if (params.get('status')) status.value = params.get('status');
+  if (params.get('q')) search.value = params.get('q');
+  if (params.get('from')) dateFrom.value = params.get('from');
+  if (params.get('to')) dateTo.value = params.get('to');
+
+  let filtered = rows();
+  let page = 1;
+
+  function withinDate(d, from, to){
+    if (!from && !to) return true;
+    if (!d) return false;
+    if (from && d < from) return false;
+    if (to && d > to) return false;
+    return true;
+  }
+
+  function applyFilters(){
+    const c = (category.value || '').toLowerCase();
+    const s = (status.value || '').toLowerCase();
+    const q = (search.value || '').trim().toLowerCase();
+    const from = dateFrom.value ? new Date(dateFrom.value) : null;
+    const to = dateTo.value ? new Date(dateTo.value+'T23:59:59') : null;
+
+    filtered = rows().filter(tr=>{
+      const rc = (tr.dataset.category||'').toLowerCase();
+      const rs = (tr.dataset.status||'').toLowerCase();
+      const rtext = (tr.dataset.search||'').toLowerCase();
+      const rdate = tr.dataset.date ? new Date(tr.dataset.date) : null;
+
+      const okC = !c || rc === c;
+      const okS = !s || rs === s;
+      const okQ = !q || rtext.includes(q);
+      const okD = withinDate(rdate, from, to);
+
+      return okC && okS && okQ && okD;
+    });
+
+    countLabel.textContent = filtered.length + ' results';
+    page = 1;
+    paint();
+    syncQueryParams();
+  }
+
+  function paint(){
+    const n = Number(perPage.value || 10);
+    const total = filtered.length;
+    const start = (page-1)*n;
+    const end = start + n;
+
+    rows().forEach(tr => tr.style.display='none');
+    filtered.slice(start, end).forEach(tr => tr.style.display='table-row');
+
+    const pages = Math.max(1, Math.ceil(total/n));
+    pageInfo.textContent = `Page ${Math.min(page,pages)} of ${pages}`;
+    prevPage.disabled = page <= 1;
+    nextPage.disabled = page >= pages;
+  }
+  prevPage.addEventListener('click', ()=>{ if (page>1){ page--; paint(); } });
+  nextPage.addEventListener('click', ()=>{
+    const pages = Math.max(1, Math.ceil(filtered.length/Number(perPage.value||10)));
+    if (page<pages){ page++; paint(); }
+  });
+  perPage.addEventListener('change', paint);
+
+  function toCsvRow(cells){ return cells.map(v=>{
+    const s = (v+'').replace(/"/g,'""');
+    return `"${s}"`;
+  }).join(','); }
+
+  function visibleRows(){
+    return filtered.filter(tr=> tr.style.display !== 'none');
+  }
+
+  qs('#exportCsv')?.addEventListener('click', ()=>{
+    const head = ['Ref','Category','Method / Asset','Amount (USD)','Status','Date','Notes'];
+    const lines = [toCsvRow(head)];
+    visibleRows().forEach(tr=>{
+      const cells = Array.from(tr.children).map(td=> td.innerText.trim());
+      lines.push(toCsvRow(cells));
+    });
+    const blob = new Blob([lines.join('\n')], {type:'text/csv;charset=utf-8;'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'transactions.csv';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  });
+
+  qs('#copyRows')?.addEventListener('click', async ()=>{
+    const lines = visibleRows().map(tr=> Array.from(tr.children).map(td=> td.innerText.trim()).join('\t'));
+    await navigator.clipboard.writeText(lines.join('\n'));
+    alert('Copied visible rows to clipboard.');
+  });
+
+  qs('#apply').addEventListener('click', applyFilters);
+  qs('#reset').addEventListener('click', ()=>{
+    category.value=''; status.value=''; search.value=''; dateFrom.value=''; dateTo.value='';
+    applyFilters();
+  });
+  search.addEventListener('input', ()=>{ applyFilters(); });
+
+  function syncQueryParams(){
+    const p = new URLSearchParams();
+    if (category.value) p.set('category', category.value);
+    if (status.value) p.set('status', status.value);
+    if (search.value) p.set('q', search.value);
+    if (dateFrom.value) p.set('from', dateFrom.value);
+    if (dateTo.value) p.set('to', dateTo.value);
+    const url = window.location.pathname + (p.toString()?('?'+p.toString()):'');
+    window.history.replaceState({}, '', url);
+  }
+
+  applyFilters();
+})();
+</script>
+{% endblock javascripts %}

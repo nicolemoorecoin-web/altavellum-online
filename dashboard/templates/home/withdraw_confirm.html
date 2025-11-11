@@ -1,0 +1,63 @@
+{% extends "layouts/base.html" %}
+{% load humanize %}
+
+{% block title %}Confirm withdrawal{% endblock %}
+
+{% block stylesheets %}
+<style>
+.page{min-height:calc(100vh - 80px); padding:1.25rem 1rem 3rem}
+.card{background:#0e1b24; border:1px solid rgba(255,255,255,.12); border-radius:22px; padding:1.25rem}
+.row{display:grid; gap:1rem}
+@media (min-width:768px){ .row{grid-template-columns:1fr 1fr} }
+.kicker{color:#9fb0be; letter-spacing:.18em; font-size:.8rem; font-weight:800}
+.h1{color:#f4e8d8; font-weight:900; font-size:1.6rem; margin:.2rem 0 1rem}
+.summary{background:#0a141b; border:1px solid rgba(255,255,255,.12); border-radius:16px; padding:1rem}
+.summary dt{color:#9fb0be; font-weight:700}
+.summary dd{color:#e9eef2; margin:0 0 .6rem 0}
+.input{width:100%; background:#0a141b; border:1px solid rgba(255,255,255,.12); color:#e9eef2; padding:.75rem .9rem; border-radius:12px}
+.btn{display:inline-flex; align-items:center; gap:.5rem; border-radius:12px; padding:.8rem 1.2rem; font-weight:900; border:2px solid transparent; cursor:pointer}
+.btn--solid{background:#b07131; color:#1f1914; border-color:rgba(0,0,0,.35)}
+.btn--ghost{background:transparent; color:#e9eef2; border-color:rgba(255,255,255,.18)}
+.actions{display:flex; gap:.6rem; flex-wrap:wrap}
+.alert{background:#10202a;border:1px solid rgba(255,255,255,.12);color:#d9f3ff;padding:.7rem 1rem;border-radius:10px;margin-bottom:.8rem}
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="page">
+  <div class="card">
+    <div class="kicker">WITHDRAW</div>
+    <h1 class="h1">Confirm send</h1>
+
+    {% if messages %}
+      {% for m in messages %}
+        <div class="alert">{{ m }}</div>
+      {% endfor %}
+    {% endif %}
+
+    <div class="row">
+      <div class="summary">
+        <dl>
+          <dt>Method</dt><dd>Crypto</dd>
+          <dt>Asset</dt><dd>{{ payload.asset }}</dd>
+          <dt>Network</dt><dd>{{ payload.network|default:"—" }}</dd>
+          <dt>Wallet address</dt><dd style="word-break:break-all">{{ payload.address }}</dd>
+          <dt>Amount (USD)</dt><dd>${{ amount_float|floatformat:2|intcomma }}</dd>
+          {% if payload.notes %}<dt>Notes</dt><dd>{{ payload.notes }}</dd>{% endif %}
+        </dl>
+      </div>
+
+      <form method="post" class="summary">
+        {% csrf_token %}
+        <label class="kicker" style="display:block;margin-bottom:.4rem">Password</label>
+        <input class="input" type="password" name="password" placeholder="Enter your password" required>
+
+        <div class="actions" style="margin-top:1rem">
+          <a class="btn btn--ghost" href="{% url 'dashboard:withdraw' %}">Back</a>
+          <button class="btn btn--solid" type="submit">Confirm withdrawal</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock content %}

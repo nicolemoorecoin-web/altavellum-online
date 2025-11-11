@@ -1,0 +1,131 @@
+{% extends 'home/dashboard.html' %}
+{% load static %}
+{% block content %}
+      <main class="main-content w-full px-[var(--margin-x)] pb-8">
+    
+        <div class="py-5 text-left lg:py-6">
+            <p class="text-sm uppercase">You are to make payment of <strong>${{ investment.amount_in_USD }}</strong> using your selected payment method.</p>
+            <p class="text-sm uppercase"> Screenshot and upload the proof of payment</p>
+            <h3 class="mt-1 text-xl font-semibold text-slate-600 dark:text-navy-100">
+                {{ investment.cryptocurrency|title }}
+            </h3>
+          </div>
+
+<div class="grid grid-cols-12 gap-4 sm:gap-5 lg:gap-6">
+<div class="col-span-12 lg:col-span-9">
+          <div class="card px-4 pb-4 sm:px-5">
+            
+            <div class="max-w-2xl">
+             
+              <div class="mt-5">
+                <div x-data="{activeTab:&#39;tabProfile&#39;}" class="tabs flex flex-col">
+                  
+                  <div class="tab-content pt-4">
+                    <div x-show="activeTab === &#39;tabProfile&#39;" x-transition:enter="transition-all duration-500 easy-in-out" x-transition:enter-start="opacity-0 [transform:translate3d(1rem,0,0)]" x-transition:enter-end="opacity-100 [transform:translate3d(0,0,0)]">
+                      <div class="p-4 sm:p-5">           
+            
+                
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <label class="block">
+                    <span><strong>{{ investment.cryptocurrency|title }} Address:</strong></span>
+                    <span class="relative mt-1.5 flex">
+                      <input class="form-input peer w-full rounded-full border border-slate-300 bg-transparent px-3 py-2 pl-9 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent" disabled="" value="{{ investment.cryptocurrency.wallet_address }}" id="myInput" readonly>
+                      <span class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent">
+                        <i class="fa-regular fa-user text-base"></i>
+                      </span>
+                    </span>
+                  </label>
+                  <label class="block">
+                    <span><strong>Network Type:</strong> -</span>
+                    <span class="relative mt-1.5 flex">
+                      <input class="form-input peer w-full rounded-full border border-slate-300 bg-transparent px-3 py-2 pl-9 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent" disabled="" value="----" type="text">
+                      <span class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent">
+                        <i class="fa-regular fa-user text-base"></i>
+                      </span>
+                    </span>
+                  </label>
+                  <form>
+                      
+                    <a href="{% url 'upload' investment.pk %}"  <button class="btn py-3 px-4 btn-primary">Upload Screenshot</button></a><br><br>
+                   
+                 </form>
+                </div>
+            </div>
+            <a href="{% url 'investments' %}">
+              <div class="flex flex-col items-center space-y-4 p-4 dark:border-navy-500 sm:flex-row sm:justify-between sm:space-y-0 sm:px-5">
+              
+                <div class="flex justify-center space-x-2">
+                  
+                  <button class="btn min-w-[7rem] rounded-full bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90" type="submit" name="sub-upd">
+                    Done
+                  </button>
+                </div>
+              </div>
+            </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        
+          </div>
+</div>
+</div>
+      </main>
+    </div>
+    <!-- 
+        This is a place for Alpine.js Teleport feature 
+        @see https://alpinejs.dev/directives/teleport
+      -->
+    <div id="x-teleport-target"></div>
+    <script>
+      window.addEventListener("DOMContentLoaded", () => Alpine.start());
+    </script>
+    
+
+<script>
+function myFunction() {
+    /* Get the text field */
+    var copyText = document.getElementById("myInput");
+    /* Select the text field */
+    copyText.select();
+    copyText.setSelectionRange(0, 99999); /* For mobile devices */
+    /* Copy the text inside the text field */
+    document.execCommand("copy");
+    /* Alert the copied text */
+    //alert("Copied the text: " + copyText.value);
+    swal("Copied", copyText.value, "success");
+    }
+  </script>
+
+{% block javascripts %}
+<script type="text/javascript">
+function copyToClipboard(element) {
+  var $temp = $("<input>");
+  $("body").append($temp);
+  $temp.val($(element).text()).select();
+  document.execCommand("copy");
+  $temp.remove();
+}
+</script>
+
+
+<script>
+  function CopyToClipboard(id)
+  {
+  var r = document.createRange();
+  r.selectNode(document.getElementById(id));
+  window.getSelection().removeAllRanges();
+  window.getSelection().addRange(r);
+  document.execCommand('copy');
+  window.getSelection().removeAllRanges();
+  }
+  </script>
+
+  
+{% endblock javascripts %}
+
+</body>
+</html>
+
+{% endblock %}

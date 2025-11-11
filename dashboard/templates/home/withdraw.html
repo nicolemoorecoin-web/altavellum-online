@@ -1,0 +1,163 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block title %}Withdraw{% endblock %}
+
+{% block stylesheets %}
+<style>
+:root{ --bg:#0f1a23; --panel:#0e1b24; --ring:rgba(255,255,255,.12);
+--ink:#d2a16d; --muted:#9fb0be; --text:#e9eef2; --accent:#b07131; --accent-ink:#1f1914; --ok:#64d394; --bad:#ff7b7b; }
+.wrap{background:var(--bg); min-height:calc(100vh - 80px); padding:1.25rem 1rem 3rem}
+@media (min-width:992px){ .wrap{padding:2rem 2rem 4rem} }
+.card{background:var(--panel); border:1px solid var(--ring); border-radius:22px; padding:1.25rem; box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.kicker{color:#9fb0be; letter-spacing:.18em; font-size:.8rem; font-weight:800}
+.title{color:#f4e8d8; font-weight:900; letter-spacing:.08em; margin:.2rem 0 1rem}
+.subtle{color:#9fb0be; font-weight:700}
+.h0{font-size:2.2rem; font-weight:900; color:#fff}
+.grid{display:grid; gap:1rem}
+@media (min-width:992px){ .grid-2{grid-template-columns:1.05fr 1fr} .grid-3{grid-template-columns:repeat(3,1fr)} }
+.input, select{ width:100%; background:#0a141b; border:1px solid var(--ring); color:#e9eef2; padding:.75rem .9rem; border-radius:12px; outline:none }
+label{display:block; color:#e9eef2; font-weight:700; letter-spacing:.04em; margin:.5rem 0 .35rem}
+.help{color:#9fb0be; font-size:.85rem}
+.table{width:100%; border-collapse:separate; border-spacing:0 10px}
+.table th{color:#cfd8df; font-weight:800; text-align:left; padding:.5rem .75rem}
+.table td{background:#0a141b; border:1px solid var(--ring); color:#e9eef2; padding:.8rem .9rem}
+.table tr td:first-child{border-top-left-radius:12px; border-bottom-left-radius:12px}
+.table tr td:last-child{border-top-right-radius:12px; border-bottom-right-radius:12px}
+.badge{font-size:.75rem; padding:.2rem .55rem; border-radius:999px; border:1px solid var(--ring); background:rgba(255,255,255,.06)}
+.alert{background:#10202a;border:1px solid var(--ring);color:#d9f3ff;padding:.7rem 1rem;border-radius:10px;margin-bottom:.8rem}
+.btn{display:inline-flex; align-items:center; gap:.5rem; border-radius:12px; padding:.75rem 1.2rem; font-weight:900; border:2px solid transparent; cursor:pointer}
+.btn--solid{background:#b07131;color:#1f1914;border-color:rgba(0,0,0,.35)}
+.btn--hollow{background:transparent;color:#fff;border-color:rgba(255,255,255,.18)}
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="wrap">
+
+  {% if messages %}
+    {% for m in messages %}<div class="alert">{{ m }}</div>{% endfor %}
+  {% endif %}
+
+  <section class="card" style="margin-bottom:1rem">
+    <div class="grid grid-3">
+      <div>
+        <div class="kicker">AVAILABLE</div>
+        <div class="h0">${{ balance_usd|default:"0.00" }}</div>
+        <div class="subtle">Withdrawable Now</div>
+      </div>
+      <div>
+        <div class="kicker">PENDING</div>
+        <div class="h0">${{ pending_withdrawals_total|default:"0.00" }}</div>
+        <div class="subtle">Awaiting confirmation</div>
+      </div>
+      <div>
+        <div class="kicker">METHOD</div>
+        <div class="subtle" style="margin-top:.35rem">Crypto withdrawal (2-step)</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="grid grid-2">
+    <div class="card">
+      <div class="kicker">WITHDRAW</div>
+      <h3 class="title">Request payout</h3>
+
+      <!-- STEP 1: posts to namespaced view -->
+      <form method="post" action="{% url 'dashboard:withdraw' %}" id="cryptoForm" novalidate>
+        {% csrf_token %}
+        <div class="badge">CRYPTO METHOD</div>
+
+        <label>Asset</label>
+        <select class="input" name="asset" id="wdCoin" required>
+          <option value="BTC">Bitcoin (BTC)</option>
+          <option value="ETH">Ethereum (ETH)</option>
+          <option value="USDT" selected>Tether (USDT)</option>
+        </select>
+
+        <label>Amount (USD)</label>
+        <input class="input" type="number" min="20" step="0.01" name="amount_usd" id="wdAmount" placeholder="e.g. 150" required>
+
+        <label>Wallet Address</label>
+        <input class="input" type="text" name="address" id="wdAddress" placeholder="Paste the destination address" minlength="6" required>
+
+        <label>Network (if applicable)</label>
+        <select class="input" name="network" id="wdNetwork">
+          <option value="TRC20" selected>TRC20</option>
+          <option value="ERC20">ERC20</option>
+          <option value="BTC">Bitcoin</option>
+        </select>
+
+        <label>Notes (optional)</label>
+        <input class="input" type="text" name="notes" placeholder="Leave a note">
+
+        <div class="help" style="margin-top:.5rem">
+          After you click <b>Request Crypto Withdrawal</b>, you'll go to a confirmation page to review and enter your password.
+        </div>
+
+        <div style="display:flex; gap:.6rem; margin-top:1rem; flex-wrap:wrap">
+          <button class="btn btn--solid" type="submit" id="cryptoBtn">Request Crypto Withdrawal</button>
+          <a class="btn btn--hollow" href="{% url 'dashboard:deposit' %}">Need funds? Deposit</a>
+        </div>
+      </form>
+    </div>
+
+    <div class="card">
+      <div class="kicker">SUMMARY</div>
+      <h3 class="title">What you'll receive</h3>
+      <div class="subtle" id="summary">Enter an amount to preview net payout after fees.</div>
+
+      <div style="margin-top:1rem" class="grid">
+        <div class="badge">Notes</div>
+        <div class="help">• Minimum crypto withdrawal: $20.<br>
+          • Incorrect network or address may cause permanent loss.<br>
+          • For large payouts we may request additional verification.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" style="margin-top:1.1rem">
+    <div class="kicker">PENDING & HISTORY</div>
+    <h3 class="title">Your withdrawal requests</h3>
+    <div style="overflow:auto">
+      <table class="table">
+        <thead><tr><th>Ref</th><th>Method</th><th>Amount</th><th>Destination</th><th>Status</th><th>Date</th></tr></thead>
+        <tbody>
+          {% for w in object_list %}
+            <tr>
+              <td>{{ w.reference }}</td>
+              <td>{{ w.method|default:"Crypto" }}</td>
+              <td>${{ w.amount_usd }}</td>
+              <td style="max-width:320px; overflow:hidden; text-overflow:ellipsis">{{ w.address|default:"—" }}</td>
+              <td>{{ w.status|default:"Pending" }}</td>
+              <td>{{ w.created_at|date:"Y-m-d H:i" }}</td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="6" class="help">No withdrawals yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+{% endblock content %}
+
+{% block javascripts %}
+<script>
+(function(){
+  const summary  = document.getElementById('summary');
+  const wdAmount = document.getElementById('wdAmount');
+  const feeRate  = 0.005; // 0.5%
+  function calc(){
+    const v = parseFloat(wdAmount?.value || '0');
+    if (!v){ summary.textContent = 'Enter an amount to preview net payout after fees.'; return; }
+    const fee = +(v*feeRate).toFixed(2), net = +(v - fee).toFixed(2);
+    summary.innerHTML =
+      'Amount: <b>$'+v.toFixed(2)+'</b> • Fee (0.5%): '+
+      '<b style="color:#ff7b7b">-$'+fee.toFixed(2)+'</b> → You receive: '+
+      '<b style="color:#64d394">$'+net.toFixed(2)+'</b>';
+  }
+  wdAmount?.addEventListener('input', calc);
+})();
+</script>
+{% endblock javascripts %}

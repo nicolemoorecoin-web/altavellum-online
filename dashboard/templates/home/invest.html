@@ -1,0 +1,343 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block title %}Invest{% endblock %}
+
+{% block stylesheets %}
+<style>
+/* ====== INVEST PAGE THEME (matches dashboard) ====== */
+:root{
+  --bg:#0f1a23;
+  --panel:#0e1b24;
+  --ring:rgba(255,255,255,.12);
+  --ink:#d2a16d;
+  --muted:#9fb0be;
+  --text:#e9eef2;
+  --accent:#b07131;  /* caramel/orange */
+  --accent-ink:#1f1914;
+}
+
+.page-wrap{background:var(--bg); min-height:calc(100vh - 80px); padding:1.25rem 1rem 3rem}
+@media (min-width:992px){ .page-wrap{padding:2rem 2rem 4rem} }
+
+.topbar{display:flex; align-items:center; gap:.75rem; margin:.25rem 0 1.25rem}
+.breadcrumb{display:flex; gap:.5rem; color:var(--muted); font-weight:700; letter-spacing:.04em}
+.breadcrumb a{color:var(--ink); text-decoration:none}
+.hi{color:#c9d6df; font-size:1.15rem}
+
+.card{background:var(--panel); border:1px solid var(--ring); border-radius:22px; padding:1.25rem; box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.card--accent{background:var(--accent); color:var(--accent-ink)}
+.card-title{color:#f4e8d8; font-weight:800; letter-spacing:.08em; margin: .1rem 0 1rem}
+.subtle{color:var(--muted); font-weight:700; letter-spacing:.05em}
+
+.h0{font-size:2.4rem; line-height:1.05; font-weight:900; color:#fff}
+.h1{font-size:1.8rem; font-weight:900; color:var(--ink)}
+.h2{font-size:1.15rem; font-weight:800; color:#f4e8d8}
+.kv{display:grid; gap:.25rem}
+
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:.5rem;
+  font-weight:900; letter-spacing:.5px;
+  border-radius:12px; padding:.75rem 1.2rem; cursor:pointer; border:2px solid transparent;
+  transition:transform .15s ease, background .15s ease, border-color .2s ease, box-shadow .2s ease;
+}
+.btn--hollow{background:transparent; border-color:rgba(255,255,255,.18); color:#fff}
+.btn--solid{background:var(--accent); color:var(--accent-ink); border-color:rgba(0,0,0,.35)}
+.btn:hover{transform:translateY(-1px)}
+.btn:disabled{opacity:.6; pointer-events:none}
+
+.grid{display:grid; gap:1rem}
+@media (min-width:768px){ .grid-2{grid-template-columns:1.15fr 1fr} .grid-3{grid-template-columns:repeat(3,1fr)} }
+@media (min-width:1200px){ .grid-3-lg{grid-template-columns:1.1fr 1fr 1fr} }
+
+.input, select, textarea{
+  width:100%; background:#0a141b; border:1px solid var(--ring); color:var(--text);
+  padding:.75rem .9rem; border-radius:12px; outline:none;
+}
+label{display:block; color:#e9eef2; font-weight:700; letter-spacing:.04em; margin:.5rem 0 .35rem}
+.help{color:var(--muted); font-size:.85rem}
+
+.plan{
+  background:#0c171f; border:1px solid var(--ring); border-radius:18px; padding:1rem;
+  display:grid; gap:.6rem; transition: border-color .2s ease, box-shadow .2s ease, transform .15s ease;
+}
+.plan:hover{transform:translateY(-1px); border-color:rgba(255,255,255,.25)}
+.plan-head{display:flex; align-items:center; justify-content:space-between}
+.badge{font-size:.75rem; font-weight:800; padding:.25rem .6rem; border-radius:999px; background:rgba(255,255,255,.08); border:1px solid var(--ring); color:#e9eef2}
+.apy{color:#f9d6a9; font-weight:900; font-size:1.15rem}
+
+.switch{display:flex; gap:.4rem; align-items:center}
+.switch input{appearance:none; height:22px; width:44px; background:#1b2a36; border:1px solid var(--ring); border-radius:999px; position:relative; outline:none}
+.switch input:checked{background:#29465e}
+.switch input::after{content:""; position:absolute; top:2px; left:2px; height:16px; width:16px; background:#f0f4f7; border-radius:50%; transition:left .2s ease}
+.switch input:checked::after{left:24px}
+
+.table{width:100%; border-collapse:separate; border-spacing:0 10px}
+.table th{color:#cfd8df; font-weight:800; text-align:left; padding:.5rem .75rem}
+.table td{background:#0a141b; border:1px solid var(--ring); color:#e9eef2; padding:.8rem .9rem}
+.table tr td:first-child{border-top-left-radius:12px; border-bottom-left-radius:12px}
+.table tr td:last-child{border-top-right-radius:12px; border-bottom-right-radius:12px}
+
+.kicker{color:#9fb0be; letter-spacing:.2em; font-size:.8rem; font-weight:800}
+.note{color:#b6c6d3; font-size:.95rem}
+
+.toast{
+  position:fixed; right:18px; bottom:18px; background:#11202b; color:#e9eef2;
+  border:1px solid var(--ring); border-radius:12px; padding:.9rem 1rem; min-width:260px;
+  box-shadow:0 8px 30px rgba(0,0,0,.35); transform:translateY(16px); opacity:0; pointer-events:none; transition:.25s ease;
+}
+.toast.show{opacity:1; transform:translateY(0); pointer-events:auto}
+.toast h5{margin:0 0 .35rem; color:#f6e7d6}
+.toast .x{cursor:pointer; margin-left:auto; opacity:.8}
+
+.help-row{display:flex; gap:1rem; flex-wrap:wrap}
+.help-box{flex:1 1 260px; background:#0a141b; border:1px dashed var(--ring); border-radius:14px; padding:.9rem}
+.help-box h6{margin:.25rem 0 .35rem; color:#e9eef2; font-weight:800}
+.help-box p{margin:0; color:#9fb0be; font-size:.9rem}
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="page-wrap">
+
+  <!-- breadcrumb + toggle -->
+  <div class="topbar">
+    <div class="breadcrumb">
+      <a href="{% url 'user-home' %}">Home</a> <span>/</span> <span>Invest</span>
+    </div>
+    <div style="margin-left:auto" class="switch">
+      <span class="subtle">Reinvest profits</span>
+      <input id="autoReinvest" type="checkbox" />
+    </div>
+  </div>
+
+  <div class="hi">Make a new investment below. Choose a plan, amount and currency—everything matches the dashboard theme.</div>
+
+  <!-- balance + quick actions -->
+  <section class="card card--accent" style="margin:.9rem 0 1.2rem">
+    <div class="grid grid-2">
+      <div class="kv">
+        <div class="subtle">Available Balance</div>
+        <div class="h0">{{ user.accounts.account_balance|default:"36,408.21" }} <span style="font-size:1.15rem">USD</span></div>
+        <div class="subtle">≈ {{ user.accounts.btc_balance_equivalent|default:"0.35000261" }} BTC</div>
+        <div style="display:flex; gap:.6rem; margin-top:.9rem; flex-wrap:wrap">
+          <a href="{% url 'dashboard:deposit' %}" class="btn btn--hollow">Deposit</a>
+          <a href="{% url 'dashboard:withdraw' %}" class="btn btn--hollow">Withdraw</a>
+        </div>
+      </div>
+      <div class="kv">
+        <div class="subtle">Your Last Plan</div>
+        <div class="h1">{{ last_plan|default:"Balanced Growth" }}</div>
+        <div class="subtle">Next payout: {{ next_payout|default:"In 24h" }}</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- select plan + form -->
+  <section class="grid grid-2">
+    <div class="card">
+      <div class="kicker">CHOOSE A PLAN</div>
+      <h3 class="card-title">Recommended strategies</h3>
+
+      <div class="grid">
+        <!-- Plan tiles -->
+        <label class="plan">
+          <div class="plan-head">
+            <div class="h2">Starter</div>
+            <span class="badge">Low risk</span>
+          </div>
+          <div class="subtle">For first deposits</div>
+          <div class="apy">APY 8–10%</div>
+          <input type="radio" name="plan_pick" value="Starter" style="margin-top:.3rem; height:18px; width:18px">
+        </label>
+
+        <label class="plan">
+          <div class="plan-head">
+            <div class="h2">Balanced Growth</div>
+            <span class="badge">Moderate</span>
+          </div>
+          <div class="subtle">Good risk/return mix</div>
+          <div class="apy">APY 12–16%</div>
+          <input type="radio" name="plan_pick" value="Balanced Growth" checked style="margin-top:.3rem; height:18px; width:18px">
+        </label>
+
+        <label class="plan">
+          <div class="plan-head">
+            <div class="h2">Aggressive</div>
+            <span class="badge">High risk</span>
+          </div>
+          <div class="subtle">Max potential yield</div>
+          <div class="apy">APY 18–26%</div>
+          <input type="radio" name="plan_pick" value="Aggressive" style="margin-top:.3rem; height:18px; width:18px">
+        </label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="kicker">NEW INVESTMENT</div>
+      <h3 class="card-title">Enter details</h3>
+
+      <form method="post" novalidate id="investForm" action="">
+        {% csrf_token %}
+        {% if form %}
+          {{ form.media|default:"" }}
+          {{ form.non_field_errors }}
+        {% endif %}
+
+        <label>Investor</label>
+        {% if form and form.investor %}{{ form.investor }}{% else %}
+          <input class="input" type="text" value="{{ request.user.username }}" disabled>
+        {% endif %}
+
+        <label>Investment Plan</label>
+        {% if form and form.investment_plan %}
+          {{ form.investment_plan }}
+        {% else %}
+          <select class="input" name="investment_plan" id="planField">
+            <option>Starter</option>
+            <option selected>Balanced Growth</option>
+            <option>Aggressive</option>
+          </select>
+        {% endif %}
+        <div class="help">Matches what you selected on the left.</div>
+
+        <label>Amount (USD)</label>
+        {% if form and form.amount_in_USD %}{{ form.amount_in_USD }}{% else %}
+          <input class="input" type="number" min="50" step="10" name="amount_in_USD" id="amountField" placeholder="e.g. 500">
+        {% endif %}
+
+        <label>Cryptocurrency</label>
+        {% if form and form.cryptocurrency %}
+          {{ form.cryptocurrency }}
+        {% else %}
+          <select class="input" name="cryptocurrency" id="coinField">
+            <option value="BTC">Bitcoin (BTC)</option>
+            <option value="ETH">Ethereum (ETH)</option>
+            <option value="USDT">Tether (USDT)</option>
+          </select>
+        {% endif %}
+
+        <div class="help">We’ll route your allocation across assets automatically based on the plan.</div>
+
+        <div style="display:flex; gap:.6rem; margin-top:1rem; flex-wrap:wrap">
+          <button class="btn btn--solid" type="submit">Start Investment</button>
+          <button class="btn btn--hollow" type="button" id="calcBtn">Estimate Returns</button>
+        </div>
+      </form>
+
+      <div id="estimateBox" class="help" style="display:none; margin-top:.8rem"></div>
+    </div>
+  </section>
+
+  <!-- pending / history -->
+  <section class="card" style="margin-top:1.1rem">
+    <div class="kicker">PENDING & HISTORY</div>
+    <h3 class="card-title">Your recent investments</h3>
+
+    <div style="overflow:auto">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Plan</th>
+            <th>Status</th>
+            <th>Currency</th>
+            <th>Amount</th>
+            <th>Started</th>
+            <th>Next Payout</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in object_list %}
+            <tr>
+              <td>{{ row.investment_plan|default:row.plan|default:"—" }}</td>
+              <td>{{ row.investment_status|default:row.status|default:"—" }}</td>
+              <td>{{ row.cryptocurrency|default:"—" }}</td>
+              <td>${{ row.amount_in_USD|default:row.amount|default:"0.00" }}</td>
+              <td>{{ row.date|default:row.created_at|default:"" }}</td>
+              <td>{{ row.next_payout|default:"—" }}</td>
+              <td><a class="btn btn--hollow" href="{% url 'investments' %}">Details</a></td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="7" class="note">No investments yet. Create your first one above.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- help / faq -->
+  <section class="grid grid-3" style="margin-top:1.1rem">
+    <div class="help-box">
+      <h6>How plans work</h6>
+      <p>Plans decide risk and rebalancing rules. You can switch on your next cycle with no fees.</p>
+    </div>
+    <div class="help-box">
+      <h6>Profit compounding</h6>
+      <p>Enable “Reinvest profits” above to automatically roll earnings into the next cycle.</p>
+    </div>
+    <div class="help-box">
+      <h6>Support</h6>
+      <p>Need help? Use the support link in the header — we respond fast.</p>
+    </div>
+  </section>
+</div>
+
+<!-- toast -->
+<div id="toast" class="toast">
+  <div style="display:flex; align-items:center; gap:.6rem">
+    <strong>Saved</strong>
+    <span class="note" id="toastMsg">Your preferences were updated.</span>
+    <span class="x" onclick="toastHide()">✕</span>
+  </div>
+</div>
+{% endblock content %}
+
+{% block javascripts %}
+<script>
+(function(){
+  const investForm = document.getElementById('investForm');
+  const planField  = document.getElementById('planField');
+  const amount     = document.getElementById('amountField');
+  const calcBtn    = document.getElementById('calcBtn');
+  const estimate   = document.getElementById('estimateBox');
+  const reinvest   = document.getElementById('autoReinvest');
+
+  function toast(msg){
+    const t = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg || 'Saved';
+    t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'), 2800);
+  }
+  window.toastHide = function(){ document.getElementById('toast').classList.remove('show'); };
+
+  reinvest?.addEventListener('change', ()=> toast('Reinvest profits: ' + (reinvest.checked?'on':'off')));
+
+  calcBtn?.addEventListener('click', ()=>{
+    const amt = parseFloat(amount?.value || '0');
+    const plan = planField?.value || document.querySelector('[name="plan_pick"]:checked')?.value || 'Balanced Growth';
+    if (!amt || amt < 50) { estimate.style.display='block'; estimate.textContent='Enter an amount of $50 or more to estimate.'; return; }
+    const rates = { 'Starter':[0.08,0.10], 'Balanced Growth':[0.12,0.16], 'Aggressive':[0.18,0.26] };
+    const [minR, maxR] = rates[plan] || rates['Balanced Growth'];
+    const min = (amt*minR).toFixed(2);
+    const max = (amt*maxR).toFixed(2);
+    estimate.style.display='block';
+    estimate.innerHTML = `Estimated yearly return for <b>${plan}</b>: <b>$${min} – $${max}</b>`;
+  });
+
+  document.querySelectorAll('input[name="plan_pick"]').forEach(el=>{
+    el.addEventListener('change', ()=>{
+      if (planField) planField.value = el.value;
+    })
+  });
+
+  investForm?.addEventListener('submit', (e)=>{
+    // light client-side guard; backend still validates
+    if (amount && (!amount.value || parseFloat(amount.value) < 50)){
+      e.preventDefault();
+      toast('Please enter at least $50.');
+    }
+  });
+})();
+</script>
+{% endblock javascripts %}

@@ -1,0 +1,121 @@
+{% extends 'home/dashboard2.html' %}
+{% load static %}
+{% block content %}
+      <main class="main-content w-full px-[var(--margin-x)] pb-8">
+    
+        <div class="py-5 text-left lg:py-6">
+            <p class="text-sm uppercase">Upload screenshot.</p>
+            <p class="text-sm uppercase"> Please Upload a screenshot as <b><strong>prove</strong> of payment</b></p>
+          </div>
+
+<div class="grid grid-cols-12 gap-4 sm:gap-5 lg:gap-6">
+<div class="col-span-12 lg:col-span-9">
+          <div class="card px-4 pb-4 sm:px-5">
+            
+            <div class="max-w-2xl">
+             
+              <div class="mt-5">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                <div x-data="{activeTab:&#39;tabProfile&#39;}" class="tabs flex flex-col">
+                  
+                  <div class="tab-content pt-4">
+                    <div x-show="activeTab === &#39;tabProfile&#39;" x-transition:enter="transition-all duration-500 easy-in-out" x-transition:enter-start="opacity-0 [transform:translate3d(1rem,0,0)]" x-transition:enter-end="opacity-100 [transform:translate3d(0,0,0)]">
+                      <div class="p-4 sm:p-5">           
+            
+                
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <label class="block">
+                    <span><strong></strong></span>
+                    <span class="relative mt-1.5 flex">
+                        {{ form.media }}
+                        {{ form }}
+                      
+                      </span>
+                    </span>
+                  </label>
+                  <label class="block">
+                    <a href="">
+                    
+                    </a>
+                  </label>
+                </div>
+            </div>
+              <div class="flex flex-col items-center space-y-4 p-4 dark:border-navy-500 sm:flex-row sm:justify-between sm:space-y-0 sm:px-5">
+              
+                <div class="flex justify-center space-x-2">
+                  <button type="submit" class="btn min-w-[7rem] rounded-full bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90">Upload Screenshot</button>
+                </div>
+              </div>
+                    </div>
+                  </div>
+                </div>
+            </form>
+              </div>
+            </div>
+        
+          </div>
+</div>
+</div>
+<script>
+    var name = "{{ user.id }}";
+    document.getElementById("elder").value = name;
+</script>
+      </main>
+    </div>
+    <!-- 
+        This is a place for Alpine.js Teleport feature 
+        @see https://alpinejs.dev/directives/teleport
+      -->
+    <div id="x-teleport-target"></div>
+    <script>
+      window.addEventListener("DOMContentLoaded", () => Alpine.start());
+    </script>
+    
+
+<script>
+function myFunction() {
+    /* Get the text field */
+    var copyText = document.getElementById("myInput");
+    /* Select the text field */
+    copyText.select();
+    copyText.setSelectionRange(0, 99999); /* For mobile devices */
+    /* Copy the text inside the text field */
+    document.execCommand("copy");
+    /* Alert the copied text */
+    //alert("Copied the text: " + copyText.value);
+    swal("Copied", copyText.value, "success");
+    }
+  </script>
+
+{% block javascripts %}
+<script type="text/javascript">
+function copyToClipboard(element) {
+  var $temp = $("<input>");
+  $("body").append($temp);
+  $temp.val($(element).text()).select();
+  document.execCommand("copy");
+  $temp.remove();
+}
+</script>
+
+
+<script>
+  function CopyToClipboard(id)
+  {
+  var r = document.createRange();
+  r.selectNode(document.getElementById(id));
+  window.getSelection().removeAllRanges();
+  window.getSelection().addRange(r);
+  document.execCommand('copy');
+  window.getSelection().removeAllRanges();
+  }
+  </script>
+
+  
+{% endblock javascripts %}
+
+</body>
+</html>
+
+{% endblock %}

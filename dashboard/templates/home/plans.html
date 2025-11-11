@@ -1,0 +1,351 @@
+{% extends 'home/dashboard2.html' %}
+{% load static %}
+{% block content %}
+<main class="main-content w-full px-[var(--margin-x)] pb-8">
+
+  <!-- Header -->
+  <div class="py-5 text-center lg:py-6">
+    <p class="text-sm uppercase text-slate-500 dark:text-navy-300">Select your investment package</p>
+    <h2 class="mt-1 text-2xl font-bold text-slate-800 dark:text-navy-50">
+      Welcome, {{ request.user.first_name|default:"User" }}. Where would you like to start?
+    </h2>
+  </div>
+
+  <!-- Quick helpers -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+    <a href="{% url 'dashboard:deposit' %}"
+       class="card rounded-xl border border-slate-200 dark:border-navy-600 bg-white dark:bg-navy-900 p-5 hover:shadow-lg transition">
+      <h4 class="text-base font-semibold text-slate-800 dark:text-navy-50">Fund your wallet</h4>
+      <p class="mt-1 text-slate-600 dark:text-navy-200">Top up before subscribing to a plan.</p>
+    </a>
+    <a href="{% url 'investments' %}"
+       class="card rounded-xl border border-slate-200 dark:border-navy-600 bg-white dark:bg-navy-900 p-5 hover:shadow-lg transition">
+      <h4 class="text-base font-semibold text-slate-800 dark:text-navy-50">View investments</h4>
+      <p class="mt-1 text-slate-600 dark:text-navy-200">See active and past subscriptions.</p>
+    </a>
+  </div>
+
+  <!-- Plans -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+    <!-- STARTER -->
+<!-- STARTER -->
+<div class="card rounded-xl shadow-lg border border-slate-200 dark:border-navy-600 bg-white dark:bg-navy-900 overflow-hidden">
+  <div class="p-6 text-center">
+    <div class="mx-auto h-16 w-16 rounded-full bg-gradient-to-br from-amber-400 to-orange-600 opacity-90"></div>
+    <h3 class="mt-5 text-xl font-semibold text-slate-800 dark:text-navy-50">Starter Plan</h3>
+    <p class="mt-1 text-slate-600 dark:text-navy-200">Our unique entry plan for first-time investors.</p>
+    <p class="mt-4 text-lg font-bold text-amber-600">$1,000 &ndash; $4,999</p>
+    <ul class="mt-4 space-y-2 text-sm text-slate-600 dark:text-navy-200 text-left inline-block">
+      <li>&bull; 10% ROI weekly</li>
+      <li>&bull; 5% referral bonus</li>
+      <li>&bull; Trading 5 days/week</li>
+    </ul>
+<a href="{% url 'invest-start' %}?plan=starter"
+   class="btn mt-6 w-full rounded-full bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus">
+  Choose Plan
+</a>
+  </div>
+</div>
+
+
+      <!-- Modal -->
+      <template x-teleport="#x-teleport-target">
+        <div x-show="open" @keydown.window.escape="open=false"
+             class="fixed inset-0 z-[100] flex items-center justify-center px-4 py-6 sm:px-5 backdrop-blur">
+          <div class="absolute inset-0 bg-slate-900/60" @click="open=false"></div>
+
+          <div x-show="open"
+               x-transition
+               class="relative w-full max-w-lg rounded-lg bg-white dark:bg-navy-700 shadow-xl">
+            <div class="flex items-center justify-between rounded-t-lg bg-slate-200 dark:bg-navy-800 px-4 py-3">
+              <h3 class="text-base font-medium text-slate-700 dark:text-navy-100">
+                Subscribe — <span class="bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-orange-600 font-semibold">Starter Plan</span>
+              </h3>
+              <button @click="open=false" class="btn h-7 w-7 rounded-full p-0 hover:bg-slate-300/20 dark:hover:bg-navy-300/20">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              </button>
+            </div>
+
+            <div class="px-4 py-4 sm:px-5">
+              <form method="post" action="{% url 'invest' %}">
+                {% csrf_token %}
+                <!-- Hidden: investor & plan -->
+                <input type="hidden" name="investor" value="{{ request.user.id }}">
+                <input type="hidden" name="investment_plan" value="STARTER PLAN">
+
+                <div class="space-y-4">
+                  <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-navy-100">Amount (USD)
+                      <span class="ml-1 text-xs text-slate-500 dark:text-navy-300">(min $1,000)</span>
+                    </label>
+                    <input name="amount_in_USD" type="number" min="1000" step="0.01" required
+                           class="form-input mt-1.5 h-12 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2
+                                  placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary
+                                  dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                           placeholder="Enter amount e.g. 2500" />
+                  </div>
+
+                  <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-navy-100">Cryptocurrency</label>
+                    <select name="cryptocurrency" required
+                            class="form-select mt-1.5 h-12 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2
+                                   hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent">
+                      <option value="" disabled selected>Select a coin</option>
+                      <option value="BTC">Bitcoin (BTC)</option>
+                      <option value="ETH">Ethereum (ETH)</option>
+                      <option value="USDT">Tether (USDT)</option>
+                    </select>
+                  </div>
+
+                  <div class="flex items-center justify-between pt-2">
+                    <span class="text-xs text-slate-500 dark:text-navy-300">
+                      Current Balance: <strong class="text-slate-700 dark:text-navy-100">${{ user.accounts.account_balance }}</strong>
+                    </span>
+                    <a class="text-xs font-medium text-primary hover:underline dark:text-accent" href="{% url 'dashboard:deposit' %}">
+                      Need to top up?
+                    </a>
+                  </div>
+
+                  <div class="text-right space-x-2">
+                    <button type="button" @click="open=false"
+                      class="btn min-w-[7rem] rounded-full border border-slate-300 text-slate-800 hover:bg-slate-150
+                             dark:border-navy-450 dark:text-navy-50 dark:hover:bg-navy-500">
+                      Cancel
+                    </button>
+                    <button type="submit"
+                      class="btn min-w-[7rem] rounded-full bg-primary text-white hover:bg-primary-focus dark:bg-accent dark:hover:bg-accent-focus">
+                      Proceed
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+          </div>
+        </div>
+      </template>
+    </div>
+
+    <!-- PREMIUM -->
+<!-- PREMIUM -->
+<div class="card rounded-xl shadow-lg border border-slate-200 dark:border-navy-600 bg-white dark:bg-navy-900 overflow-hidden">
+  <div class="p-6 text-center">
+    <div class="mx-auto h-16 w-16 rounded-full bg-gradient-to-br from-amber-400 to-orange-600 opacity-90"></div>
+    <h3 class="mt-5 text-xl font-semibold text-slate-800 dark:text-navy-50">Premium Plan</h3>
+    <p class="mt-1 text-slate-600 dark:text-navy-200">For growing portfolios and mini businesses.</p>
+    <p class="mt-4 text-lg font-bold text-amber-600">$5,000 &ndash; $29,000</p>
+    <ul class="mt-4 space-y-2 text-sm text-slate-600 dark:text-navy-200 text-left inline-block">
+      <li>&bull; 25% ROI weekly</li>
+      <li>&bull; 7% referral bonus</li>
+      <li>&bull; Trading 5 days/week</li>
+    </ul>
+
+    <a href="{% url 'invest-start' %}?plan=premium" class="btn mt-6 w-full rounded-full bg-primary font-medium text-white">Choose Plan</a>
+  </div>
+</div>
+
+
+      <!-- Modal -->
+      <template x-teleport="#x-teleport-target">
+        <div x-show="open" @keydown.window.escape="open=false"
+             class="fixed inset-0 z-[100] flex items-center justify-center px-4 py-6 sm:px-5 backdrop-blur">
+          <div class="absolute inset-0 bg-slate-900/60" @click="open=false"></div>
+
+          <div x-show="open" x-transition class="relative w-full max-w-lg rounded-lg bg-white dark:bg-navy-700 shadow-xl">
+            <div class="flex items-center justify-between rounded-t-lg bg-slate-200 dark:bg-navy-800 px-4 py-3">
+              <h3 class="text-base font-medium text-slate-700 dark:text-navy-100">
+                Subscribe — <span class="bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-orange-600 font-semibold">Premium Plan</span>
+              </h3>
+              <button @click="open=false" class="btn h-7 w-7 rounded-full p-0 hover:bg-slate-300/20 dark:hover:bg-navy-300/20">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              </button>
+            </div>
+
+            <div class="px-4 py-4 sm:px-5">
+              <form method="post" action="{% url 'invest' %}">
+                {% csrf_token %}
+                <input type="hidden" name="investor" value="{{ request.user.id }}">
+                <input type="hidden" name="investment_plan" value="PREMIUM PLAN">
+
+                <div class="space-y-4">
+                  <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-navy-100">Amount (USD)
+                      <span class="ml-1 text-xs text-slate-500 dark:text-navy-300">(min $5,000)</span>
+                    </label>
+                    <input name="amount_in_USD" type="number" min="5000" step="0.01" required
+                           class="form-input mt-1.5 h-12 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2
+                                  placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary
+                                  dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                           placeholder="Enter amount e.g. 10000" />
+                  </div>
+
+                  <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-navy-100">Cryptocurrency</label>
+                    <select name="cryptocurrency" required
+                            class="form-select mt-1.5 h-12 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2
+                                   hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent">
+                      <option value="" disabled selected>Select a coin</option>
+                      <option value="BTC">Bitcoin (BTC)</option>
+                      <option value="ETH">Ethereum (ETH)</option>
+                      <option value="USDT">Tether (USDT)</option>
+                    </select>
+                  </div>
+
+                  <div class="flex items-center justify-between pt-2">
+                    <span class="text-xs text-slate-500 dark:text-navy-300">
+                      Current Balance: <strong class="text-slate-700 dark:text-navy-100">${{ user.accounts.account_balance }}</strong>
+                    </span>
+                    <a class="text-xs font-medium text-primary hover:underline dark:text-accent" href="{% url 'dashboard:deposit' %}">
+                      Need to top up?
+                    </a>
+                  </div>
+
+                  <div class="text-right space-x-2">
+                    <button type="button" @click="open=false"
+                      class="btn min-w-[7rem] rounded-full border border-slate-300 text-slate-800 hover:bg-slate-150
+                             dark:border-navy-450 dark:text-navy-50 dark:hover:bg-navy-500">
+                      Cancel
+                    </button>
+                    <button type="submit"
+                      class="btn min-w-[7rem] rounded-full bg-primary text-white hover:bg-primary-focus dark:bg-accent dark:hover:bg-accent-focus">
+                      Proceed
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+          </div>
+        </div>
+      </template>
+    </div>
+
+    <!-- PARTNERSHIP -->
+<!-- PARTNERSHIP -->
+<div class="card rounded-xl shadow-lg border border-slate-200 dark:border-navy-600 bg-white dark:bg-navy-900 overflow-hidden">
+  <div class="p-6 text-center">
+    <div class="mx-auto h-16 w-16 rounded-full bg-gradient-to-br from-amber-400 to-orange-600 opacity-90"></div>
+    <h3 class="mt-5 text-xl font-semibold text-slate-800 dark:text-navy-50">Partnership</h3>
+    <p class="mt-1 text-slate-600 dark:text-navy-200">For large allocations and partnerships.</p>
+    <p class="mt-4 text-lg font-bold text-amber-600">$100,000 &ndash; $1,000,000</p>
+    <ul class="mt-4 space-y-2 text-sm text-slate-600 dark:text-navy-200 text-left inline-block">
+      <li>&bull; 50% ROI weekly</li>
+      <li>&bull; 25% referral bonus</li>
+      <li>&bull; Trading 5 days/week</li>
+    </ul>
+
+    <a href="{% url 'invest-start' %}?plan=business" class="btn mt-6 w-full rounded-full bg-primary font-medium text-white">Choose Plan</a>
+  </div>
+</div>
+
+
+      <!-- Modal -->
+      <template x-teleport="#x-teleport-target">
+        <div x-show="open" @keydown.window.escape="open=false"
+             class="fixed inset-0 z-[100] flex items-center justify-center px-4 py-6 sm:px-5 backdrop-blur">
+          <div class="absolute inset-0 bg-slate-900/60" @click="open=false"></div>
+
+          <div x-show="open" x-transition class="relative w-full max-w-lg rounded-lg bg-white dark:bg-navy-700 shadow-xl">
+            <div class="flex items-center justify-between rounded-t-lg bg-slate-200 dark:bg-navy-800 px-4 py-3">
+              <h3 class="text-base font-medium text-slate-700 dark:text-navy-100">
+                Subscribe — <span class="bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-orange-600 font-semibold">Partnership</span>
+              </h3>
+              <button @click="open=false" class="btn h-7 w-7 rounded-full p-0 hover:bg-slate-300/20 dark:hover:bg-navy-300/20">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              </button>
+            </div>
+
+            <div class="px-4 py-4 sm:px-5">
+              <form method="post" action="{% url 'invest' %}">
+                {% csrf_token %}
+                <input type="hidden" name="investor" value="{{ request.user.id }}">
+                <input type="hidden" name="investment_plan" value="PARTNERSHIP">
+
+                <div class="space-y-4">
+                  <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-navy-100">Amount (USD)
+                      <span class="ml-1 text-xs text-slate-500 dark:text-navy-300">(min $100,000)</span>
+                    </label>
+                    <input name="amount_in_USD" type="number" min="100000" step="0.01" required
+                           class="form-input mt-1.5 h-12 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2
+                                  placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary
+                                  dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                           placeholder="Enter amount e.g. 250000" />
+                  </div>
+
+                  <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-navy-100">Cryptocurrency</label>
+                    <select name="cryptocurrency" required
+                            class="form-select mt-1.5 h-12 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2
+                                   hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent">
+                      <option value="" disabled selected>Select a coin</option>
+                      <option value="BTC">Bitcoin (BTC)</option>
+                      <option value="ETH">Ethereum (ETH)</option>
+                      <option value="USDT">Tether (USDT)</option>
+                    </select>
+                  </div>
+
+                  <div class="flex items-center justify-between pt-2">
+                    <span class="text-xs text-slate-500 dark:text-navy-300">
+                      Current Balance: <strong class="text-slate-700 dark:text-navy-100">${{ user.accounts.account_balance }}</strong>
+                    </span>
+                    <a class="text-xs font-medium text-primary hover:underline dark:text-accent" href="{% url 'dashboard:deposit' %}">
+                      Need to top up?
+                    </a>
+                  </div>
+
+                  <div class="text-right space-x-2">
+                    <button type="button" @click="open=false"
+                      class="btn min-w-[7rem] rounded-full border border-slate-300 text-slate-800 hover:bg-slate-150
+                             dark:border-navy-450 dark:text-navy-50 dark:hover:bg-navy-500">
+                      Cancel
+                    </button>
+                    <button type="submit"
+                      class="btn min-w-[7rem] rounded-full bg-primary text-white hover:bg-primary-focus dark:bg-accent dark:hover:bg-accent-focus">
+                      Proceed
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+          </div>
+        </div>
+      </template>
+    </div>
+
+  </div>
+
+  <!-- How it works -->
+  <div class="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="card rounded-xl border border-slate-200 dark:border-navy-600 bg-white dark:bg-navy-900 p-6">
+      <h4 class="text-lg font-semibold text-slate-800 dark:text-navy-50">How it works</h4>
+      <ol class="mt-3 list-decimal list-inside space-y-1 text-slate-600 dark:text-navy-200">
+        <li>Deposit funds into your wallet.</li>
+        <li>Choose a plan that matches your risk profile.</li>
+        <li>Confirm amount and cryptocurrency in the modal.</li>
+      </ol>
+    </div>
+    <div class="grid grid-cols-1 gap-6">
+      <a href="{% url 'dashboard:deposit' %}" class="card rounded-xl border border-slate-200 dark:border-navy-600 bg-white dark:bg-navy-900 p-6 hover:shadow-lg transition">
+        <h4 class="text-lg font-semibold text-slate-800 dark:text-navy-50">Need to top up?</h4>
+        <p class="mt-2 text-slate-600 dark:text-navy-200">You can add funds any time. Deposits usually confirm within minutes depending on network conditions.</p>
+        <span class="mt-4 inline-block btn rounded-full bg-primary text-white px-5">Go to Deposit</span>
+      </a>
+      <a href="{% url 'investments' %}" class="card rounded-xl border border-slate-200 dark:border-navy-600 bg-white dark:bg-navy-900 p-6 hover:shadow-lg transition">
+        <h4 class="text-lg font-semibold text-slate-800 dark:text-navy-50">Your history</h4>
+        <p class="mt-2 text-slate-600 dark:text-navy-200">Track pending and completed investments in one place.</p>
+        <span class="mt-4 inline-block btn rounded-full bg-slate-800/90 text-white dark:bg-navy-500 px-5">Open Investments</span>
+      </a>
+    </div>
+  </div>
+
+</main>
+{% endblock %}

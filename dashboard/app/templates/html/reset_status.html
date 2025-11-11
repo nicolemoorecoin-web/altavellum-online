@@ -1,0 +1,153 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  
+<head>
+    <!-- Meta tags  -->
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+
+    <title>Stockblazee - Reset Password</title>
+    <link rel="icon" type="image/png" href="{% static 'new_dashboard/favicon.png' %}" />
+
+    <!-- CSS Assets -->
+    <link rel="stylesheet" href="{% static 'new_auth/css/app.css' %}" />
+
+    <!-- Javascript Assets -->
+    <script src="{% static 'new_auth/js/app.js' %}" defer></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com/" />
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&amp;display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" integrity="sha512-c42qTSw/wPZ3/5LBzD+Bw5f7bSF2oxou6wEb+I/lqeaKV5FDIfMvvRp772y4jcJLKuGUOpbJMdg/BTl50fJYAw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.1.9/sweetalert2.min.css" integrity="sha512-cyIcYOviYhF0bHIhzXWJQ/7xnaBuIIOecYoPZBgJHQKFPo+TOBA+BY1EnTpmM8yKDU4ZdI3UGccNGCEUdfbBqw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.1.9/sweetalert2.all.min.js" integrity="sha512-IZ95TbsPTDl3eT5GwqTJH/14xZ2feLEGJRbII6bRKtE/HC6x3N4cHye7yyikadgAsuiddCY2+6gMntpVHL1gHw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  </head>
+  <body x-data class="is-header-blur" x-bind="$store.global.documentBody">
+
+
+
+    
+
+    <!-- App preloader-->
+    <div
+      class="app-preloader fixed z-50 grid h-full w-full place-content-center bg-slate-50 dark:bg-navy-900"
+    >
+      <div class="app-preloader-inner relative inline-block h-48 w-48"></div>
+    </div>
+
+    <!-- Page Wrapper -->
+    <div
+      id="root"
+      class="min-h-100vh flex grow bg-slate-50 dark:bg-navy-900"
+      x-cloak
+    >
+      <div class="fixed top-0 hidden p-6 lg:block lg:px-12">
+        <a href="#" class="flex items-center space-x-2">
+          <img class="h-12 w-12" src="{% static 'new_dashboard/favicon.png' %}" alt="logo" />
+          <p
+            class="text-xl font-semibold  text-slate-700 dark:text-navy-100"
+          >
+           roi.interfxmarket
+          </p>
+        </a>
+      </div>
+      <div class="hidden w-full place-items-center lg:grid">
+        <div class="w-full max-w-lg p-6">
+          <img
+            class="w-full"
+            x-show="!$store.global.isDarkModeEnabled"
+            src="{% static 'new_auth/images/illustrations/auth-check.svg' %}"
+            alt="image"
+          />
+          <img
+            class="w-full"
+            x-show="$store.global.isDarkModeEnabled"
+            src="{% static 'new_auth/images/illustrations/auth-check-dark.svg' %}"
+            alt="image"
+          />
+        </div>
+      </div>
+      {% if 'email' in request.get_full_path %}
+      <main
+        class="flex w-full flex-col items-center bg-white dark:bg-navy-700 lg:max-w-md"
+      >
+        <div class="flex w-full max-w-sm grow flex-col justify-center p-5">
+          <div class="text-center">
+            <img
+              class="mx-auto h-16 w-16 lg:hidden"
+              src="{% static 'new_dashboard/favicon.png' %}"
+              alt="logo"
+            />
+            <div class="mt-4">
+              <h2
+                class="text-2xl font-semibold text-slate-600 dark:text-navy-100"
+              >
+                Reset your password
+              </h2>
+              <p class="text-slate-400 dark:text-navy-300">
+                Check email for instructions
+              </p>
+            </div>
+          </div>
+        </div>
+      </main>
+      {% endif%}
+{% if 'complete' in request.get_full_path %}
+<main
+class="flex w-full flex-col items-center bg-white dark:bg-navy-700 lg:max-w-md"
+>
+<div class="flex w-full max-w-sm grow flex-col justify-center p-5">
+  <div class="text-center">
+    <img
+      class="mx-auto h-16 w-16 lg:hidden"
+      src="{% static 'new_dashboard/favicon.png' %}"
+      alt="logo"
+    />
+    <div class="mt-4">
+      <h2
+        class="text-2xl font-semibold text-slate-600 dark:text-navy-100"
+      >
+        Password reset Success
+      </h2>
+      <p class="text-slate-400 dark:text-navy-300">
+        <a href="{% url 'login' %}">Login</a>
+        
+      </p>
+    </div>
+  </div>
+</div>
+</main>
+{% endif %}
+    </div>
+
+
+    <!-- 
+        This is a place for Alpine.js Teleport feature 
+        @see https://alpinejs.dev/directives/teleport
+      -->
+    <div id="x-teleport-target"></div>
+    <script>
+      window.addEventListener("DOMContentLoaded", () => Alpine.start());
+    </script>
+     <script>
+     function urbg(){
+       //  alert(5);
+element=document.getElementsByTagName("html")[0];         
+  element.classList.add("dark");
+     }
+     
+     setTimeout(urbg,1000);
+ </script>
+ 
+  </body>
+</html>

@@ -1,0 +1,72 @@
+{% extends 'auth.html' %}
+
+{% block title %} Sign IN {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<section class=" auth">
+  <div class="container">
+      <div class="pb-3 row justify-content-center">
+
+          <div class="col-12 col-md-6 col-lg-6 col-sm-10 col-xl-6">
+              <div class="text-center">
+              <a href="{% url 'home' %}"><img src="https://res.cloudinary.com/dqedrkrmg/image/upload/v1698568839/a29a0870245240298efd508ff3fc0dd1-removebg-preview_qwbsu7.png" alt="" class="mb-3 img-fluid" width="40%"></a>
+              </div>
+              
+                                                              <div class="bg-white shadow card login-page roundedd border-1 ">
+                  <div class="card-body">
+                      <h4 class="text-center card-title">Complete Registration</h4>
+                      <form method="post" class="mt-4 login-form">
+            
+                          
+                          {% csrf_token %}
+          
+                          {{form}}
+          
+                        
+                            <div class="text-center">
+                              <input type="submit" value="Submit" class="btn btn-info mt-3">
+                            </div>
+                          </form>
+                         
+                  </div>
+              </div>
+              <!---->
+          </div>
+          <!--end col-->
+      </div>
+      <!--end row-->
+  </div>
+  <script>
+    var name = "{{ user.id }}";
+    document.getElementById("elder").value = name;
+  </script>
+  <!--end container-->
+</section>
+<!--end section-->
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+
+  <script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+  </script>
+
+{% endblock javascripts %}
+
+
+
+
+
+

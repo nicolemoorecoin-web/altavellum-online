@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<style>
+  .pf-hero{
+    background: linear-gradient(180deg,#ff8f7a, #ffa68a);
+    height:180px; position:relative;
+    border-radius:0 0 24px 24px;
+  }
+  .pf-card{
+    max-width:760px; margin:-70px auto 40px;
+    background:#fff; border-radius:16px;
+    box-shadow:0 12px 30px rgba(0,0,0,.08); padding:24px;
+  }
+  /* Avatar */
+  .pf-avatar{
+    width:120px;height:120px;border-radius:50%;
+    overflow:hidden;border:6px solid #fff;
+    margin:-84px auto 12px;display:block;
+    box-shadow:0 6px 18px rgba(0,0,0,.12);
+    background:#f3f4f6;
+  }
+  .pf-avatar img{width:100%;height:100%;object-fit:cover;display:block;}
+
+  .pf-name{font-weight:700;font-size:1.25rem;text-align:center;margin-bottom:4px;}
+  .pf-email{color:#6c757d;font-size:.95rem;text-align:center;margin-bottom:12px;}
+
+  /* FIX: correct class name for the button */
+  .pf-edit-btn{
+    display:block;margin:0 auto 18px; padding:10px 18px;
+    border-radius:999px;border:none;background:#1f2a24;color:#fff;
+    text-align:center;text-decoration:none;
+  }
+
+  .pf-section{margin-top:8px;}
+  .pf-title{font-weight:700;color:#6b6b6b;font-size:.9rem;margin:18px 0 8px;}
+  .pf-list{list-style:none;margin:0;padding:0;border-radius:12px;overflow:hidden;border:1px solid #e9ecef;}
+  .pf-item{display:flex;align-items:center;justify-content:space-between;padding:14px 14px;border-bottom:1px solid #e9ecef;background:#fff;}
+  .pf-item:last-child{border-bottom:none;}
+  .pf-item .lbl{display:flex;align-items:center;gap:10px;}
+  .val{color:#111827;font-weight:600;}
+  .chev{font-weight:700;color:#b0b0b0;margin-left:8px;}
+  .val-wrap{display:flex;align-items:center;gap:6px;}
+</style>
+
+<div class="pf-hero"></div>
+
+<div class="container">
+  <div class="pf-card">
+    <!-- Avatar -->
+    <span class="pf-avatar" aria-label="Profile picture">
+      {% if avatar_url %}
+        <img src="{{ avatar_url }}" alt="Avatar">
+      {% elif profile and profile.avatar %}
+        <img src="{{ profile.avatar.url }}" alt="Avatar">
+      {% else %}
+        <img src="{% static 'assets/img/avatar-default.png' %}" alt="Avatar">
+      {% endif %}
+    </span>
+
+    <!-- Name + email -->
+    <div class="pf-name">
+      {{ request.user.get_full_name|default:request.user.username }}
+    </div>
+    <div class="pf-email">{{ request.user.email|default:"—" }}</div>
+
+    <!-- Edit button -->
+    <a class="pf-edit-btn" href="{% url 'dashboard:profile_edit' %}" aria-label="Edit profile">Edit Your Profile</a>
+
+    <!-- Personal details -->
+    <div class="pf-section">
+      <div class="pf-title">Personal Information</div>
+      <ul class="pf-list">
+        <li class="pf-item">
+          <span class="lbl">Name</span>
+          <span class="val-wrap">
+            <span class="val">
+              {% if request.user.first_name or request.user.last_name %}
+                {{ request.user.first_name|default:"" }} {{ request.user.last_name|default:"" }}
+              {% else %}—{% endif %}
+            </span>
+            <span class="chev">›</span>
+          </span>
+        </li>
+
+        <li class="pf-item">
+          <span class="lbl">Phone Number</span>
+          <span class="val-wrap">
+            <span class="val">{{ phone_display|default:"—" }}</span>
+            <span class="chev">›</span>
+          </span>
+        </li>
+
+        <li class="pf-item">
+          <span class="lbl">Country</span>
+          <span class="val-wrap">
+            <span class="val">{{ country_display|default:"—" }}</span>
+            <span class="chev">›</span>
+          </span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Static sections for now -->
+    <div class="pf-section">
+      <div class="pf-title">User Strength</div>
+      <ul class="pf-list">
+        <li class="pf-item"><span class="lbl">Beginner</span><span class="chev">›</span></li>
+        <li class="pf-item"><span class="lbl">KYC Status</span><span class="chev">›</span></li>
+      </ul>
+    </div>
+
+    <div class="pf-section">
+      <div class="pf-title">Preferences</div>
+      <ul class="pf-list">
+        <li class="pf-item"><span class="lbl">Language</span><span class="chev">›</span></li>
+        <li class="pf-item"><span class="lbl">Dark mode</span><span class="chev">›</span></li>
+        <li class="pf-item"><span class="lbl">Only Download via Wi-Fi</span><span class="chev">›</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}

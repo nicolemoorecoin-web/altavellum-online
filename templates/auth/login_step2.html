@@ -1,0 +1,199 @@
+{% extends "layouts/base_auth.html" %}
+{% block title %}OTP verification{% endblock %}
+
+{% block content %}
+<style>
+  :root{
+    --bg:#F5F7FF;          /* page background */
+    --card:#FFFFFF;        /* card */
+    --border:#E6E8F5;
+    --text:#1C2240;
+    --muted:#667085;
+    --primary:#4F5BD5;     /* blue/purple like the sample */
+    --primary-press:#3f48ab;
+
+    /* OTP sizing (smaller than before) */
+    --otp-size: 44px;      /* desktop box width/height */
+    --otp-font: 18px;
+    --otp-gap: 8px;
+  }
+
+  @media (max-width: 540px){
+    :root{
+      --otp-size: 38px;    /* smaller on mobile */
+      --otp-font: 16px;
+      --otp-gap: 6px;
+    }
+  }
+
+  body{ background:var(--bg); color:var(--text); }
+
+  .auth-shell{min-height:100vh; display:grid; grid-template-rows:auto 1fr; }
+  .topbar{display:flex; justify-content:space-between; align-items:center; padding:20px 24px;}
+  .brand{display:flex; align-items:center; gap:10px; font-weight:700; letter-spacing:.2px;}
+  .brand .logo-dot{width:18px; height:18px; border-radius:50%; background:var(--primary); display:inline-block}
+  .lang{color:var(--muted); font-size:14px;}
+
+  .stage{display:grid; place-items:center; padding:24px;}
+  .card{
+    width:100%; max-width:440px; background:var(--card);
+    border:1px solid var(--border); border-radius:16px;
+    box-shadow:0 12px 30px rgba(28,34,64,.08); padding:26px 24px;
+  }
+
+  h1{font-size:24px; margin:0 0 4px}
+  .lead{color:var(--muted); font-size:14px; margin-bottom:14px}
+
+  .alert{background:#F2F4FF; border:1px solid #E1E5FF; color:#3944a0;
+         padding:10px 12px; border-radius:10px; font-size:14px; margin-bottom:14px}
+
+  .otp-wrap{margin-top:10px}
+  /* NEW: fixed-size, compact boxes */
+  .otp-grid{
+    display:grid;
+    grid-template-columns: repeat(6, var(--otp-size));
+    gap: var(--otp-gap);
+    justify-content: space-between; /* spreads evenly */
+  }
+  .otp{
+    width: var(--otp-size);
+    height: var(--otp-size);
+    text-align:center;
+    font-size: var(--otp-font);
+    border-radius:10px;
+    background:#FBFCFF;
+    border:1px solid var(--border);
+    color:var(--text);
+    outline:none; transition:border .15s ease, box-shadow .15s ease, transform .05s;
+  }
+  .otp:focus{border-color:var(--primary); box-shadow:0 0 0 3px rgba(79,91,213,.18)}
+  .otp:active{transform: scale(.985)}
+
+  .actions{margin-top:16px; display:flex; flex-direction:column; gap:10px}
+  .btn{
+    display:inline-flex; justify-content:center; align-items:center;
+    height:44px; border-radius:12px; border:none; cursor:pointer; font-weight:600;
+  }
+  .btn-primary{background:var(--primary); color:#fff}
+  .btn-primary:active{background:var(--primary-press)}
+  .btn-outline{
+    background:#fff; color:var(--text); border:1px solid var(--border)
+  }
+
+  .foot{display:flex; justify-content:space-between; align-items:center; margin-top:8px}
+  .muted{color:var(--muted); font-size:14px}
+  .link{color:var(--primary); text-decoration:none}
+  .link:hover{text-decoration:underline}
+</style>
+
+<div class="auth-shell">
+  <!-- top bar like sample -->
+  <div class="topbar">
+    <div class="brand">
+      <span class="logo-dot"></span>
+      <span>{{ SITE_NAME|default:"ALTAVELLUM" }}</span>
+    </div>
+    <div class="lang">Language</div>
+  </div>
+
+  <div class="stage">
+    <div class="card">
+      <h1>OTP verification</h1>
+      <div class="lead">
+        Please enter the 6-digit code sent to <b>{{ masked_email }}</b> to complete your sign-in.
+      </div>
+
+      {% if messages %}
+        {% for m in messages %}<div class="alert">{{ m }}</div>{% endfor %}
+      {% endif %}
+
+      <form id="otpForm" method="post" novalidate class="otp-wrap">
+        {% csrf_token %}
+        <input type="hidden" name="code" id="codeFull" required>
+
+        <div class="otp-grid" aria-label="One-time passcode">
+          <input class="otp" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 1" />
+          <input class="otp" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 2" />
+          <input class="otp" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 3" />
+          <input class="otp" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 4" />
+          <input class="otp" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 5" />
+          <input class="otp" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 6" />
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-primary" type="submit">Verify</button>
+          <a class="btn btn-outline" href="{% url 'login' %}">Cancel</a>
+        </div>
+
+        <div class="foot">
+          <span class="muted" id="timer">Remaining time: 00:59</span>
+          <a class="link" id="resendLink" href="?resend=1" style="visibility:hidden">Resend</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const inputs = Array.from(document.querySelectorAll('.otp'));
+  const hidden = document.getElementById('codeFull');
+  const form = document.getElementById('otpForm');
+
+  // focus first box
+  inputs[0]?.focus();
+
+  function rebuild() {
+    hidden.value = inputs.map(i => (i.value || '').replace(/\D/g,'')).join('').slice(0, 6);
+  }
+
+  inputs.forEach((el, idx) => {
+    el.addEventListener('input', () => {
+      el.value = el.value.replace(/\D/g,'');
+      if (el.value && idx < inputs.length - 1) inputs[idx+1].focus();
+      rebuild();
+    });
+    el.addEventListener('keydown', e => {
+      if (e.key === 'Backspace' && !el.value && idx > 0) inputs[idx-1].focus();
+    });
+    el.addEventListener('paste', e => {
+      const txt = (e.clipboardData || window.clipboardData).getData('text') || '';
+      const digits = txt.replace(/\D/g,'').slice(0,6).split('');
+      if (digits.length) {
+        e.preventDefault();
+        inputs.forEach((box, j) => box.value = digits[j] || '');
+        rebuild();
+        const last = inputs[Math.min(digits.length, inputs.length) - 1];
+        last && last.focus();
+      }
+    });
+  });
+
+  form.addEventListener('submit', e => {
+    rebuild();
+    if (hidden.value.length !== 6) {
+      e.preventDefault();
+      inputs[0].focus();
+      alert('Enter the 6-digit code');
+    }
+  });
+
+  // resend timer (front-end). Back-end already enforces cooldown in the view.
+  let secs = 59;
+  const timer = document.getElementById('timer');
+  const resend = document.getElementById('resendLink');
+  const tick = () => {
+    if (secs > 0) {
+      const s = secs.toString().padStart(2,'0');
+      timer.textContent = `Remaining time: 00:${s}`;
+      secs -= 1;
+      setTimeout(tick, 1000);
+    } else {
+      timer.textContent = "Didn't get the code?";
+      resend.style.visibility = 'visible';
+    }
+  };
+  tick();
+})();
+</script>
+{% endblock %}

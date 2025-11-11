@@ -1,0 +1,18 @@
+<!doctype html>
+<html>
+  <body style="font-family:Inter,Arial,sans-serif;background:#0f1a23;margin:0;padding:0">
+    <div style="max-width:580px;margin:0 auto;background:#0e1b24;border:1px solid #253444;border-radius:14px;padding:24px;color:#e9eef2">
+      <h2 style="margin:0 0 8px">New login to {{ site_name }}</h2>
+      <p style="margin:8px 0 16px;color:#9fb0be">We noticed a successful sign-in to your account.</p>
+      <ul style="margin:0 0 16px 16px;padding:0;color:#e9eef2">
+        <li>IP: {{ ip }}</li>
+        <li>Device: {{ ua }}</li>
+        <li>Time: {{ time }}</li>
+      </ul>
+      <p style="margin:16px 0;color:#ffd1d1"><b>Wasn’t you?</b> 
+        <a href="{{ site_url }}/accounts/password_reset/" style="color:#64d394">Reset your password</a> and contact support.</p>
+      <hr style="border:0;border-top:1px solid #253444;margin:18px 0">
+      <p style="color:#9fb0be;font-size:12px;margin:0">Security notification from {{ site_name }}.</p>
+    </div>
+  </body>
+</html>

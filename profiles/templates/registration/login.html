@@ -1,0 +1,45 @@
+{% extends "home/dashboard.html" %}
+{% load static %}
+{% block content %}
+
+<main class="main-content w-full px-[var(--margin-x)] pb-8">
+  <div class="max-w-md mx-auto rounded-lg border border-slate-200 bg-white p-6 shadow-lg dark:border-navy-600 dark:bg-navy-800">
+    <h2 class="mb-4 text-center text-xl font-semibold text-slate-700 dark:text-navy-100">
+      Log in
+    </h2>
+
+    {% if form.errors %}
+      <div class="mb-3 rounded-lg bg-rose-50 p-3 text-rose-700 dark:bg-rose-500/10 dark:text-rose-200">
+        Please check your username and password and try again.
+      </div>
+    {% endif %}
+
+    <form method="post" action="">
+      {% csrf_token %}
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-slate-600 dark:text-navy-200">Username</label>
+          <input type="text" name="username" autofocus required
+                 class="form-input mt-1 w-full rounded-lg border-slate-300 bg-slate-50 px-3 py-2 focus:border-primary focus:ring focus:ring-primary/50 dark:border-navy-500 dark:bg-navy-700 dark:text-navy-50">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-600 dark:text-navy-200">Password</label>
+          <input type="password" name="password" required
+                 class="form-input mt-1 w-full rounded-lg border-slate-300 bg-slate-50 px-3 py-2 focus:border-primary focus:ring focus:ring-primary/50 dark:border-navy-500 dark:bg-navy-700 dark:text-navy-50">
+        </div>
+      </div>
+
+      <button type="submit"
+              class="btn mt-6 w-full rounded-full bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus">
+        Log in
+      </button>
+
+      <p class="mt-4 text-center text-sm text-slate-600 dark:text-navy-200">
+        Don’t have an account?
+        <a href="{% url 'register' %}" class="text-primary hover:underline">Register</a>
+      </p>
+    </form>
+  </div>
+</main>
+
+{% endblock %}

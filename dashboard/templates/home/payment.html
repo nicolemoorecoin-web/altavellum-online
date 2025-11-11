@@ -1,0 +1,707 @@
+{% extends 'home/dashboard2.html' %}
+{% load static %}
+{% block content %}
+      <main class="main-content w-full px-[var(--margin-x)] pb-8">
+
+ 
+    <div class="flex items-center space-x-4 py-5 lg:py-6">
+          <h2
+            class="text-xl font-medium text-slate-800 dark:text-navy-50 lg:text-2xl"
+          >
+            Deposit-Payment
+          </h2>
+          <div class="hidden h-full py-1 sm:flex">
+            <div class="h-full w-px bg-slate-300 dark:bg-navy-600"></div>
+          </div>
+          <ul class="hidden flex-wrap items-center space-x-2 sm:flex">
+            <li class="flex items-center space-x-2">
+              <a
+                class="text-primary transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
+                href="#"
+                >User</a
+              >
+              <svg
+                x-ignore
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </li>
+            <li>Deposit-Payment</li>
+          </ul>
+        </div>
+<style>
+    @media (max-width:680px){
+        .mw{width:100% !important;}
+    }
+</style>
+   <div class="col-lg-4">
+     <style>
+#showpaymentdiv{position:fixed;top:2vh;left:0px;width:100%;height:100vh;
+    background:#919191;
+    box-shadow:0px 0px 0px #E6EDF5;
+    border-radius:0.8em;
+    z-index:99999999999;
+    display:none;
+}   
+
+ @media (max-width:680px){
+       #showpaymentdiv{top:0px;}
+    }
+</style>
+<div id="showpaymentdiv">
+  <button type="button" class="close fclose2cd" data-dismiss="modal" aria-label="Close" style="float: right;font-size:26px" onclick="fclose2cd()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+		
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="dist/css/DatPayment.css">
+        <link rel="stylesheet" type="text/css" href="example.css">
+		<style>.dpf-input-row{margin-top:2px !important;margin-bottom:2px !important;}
+		.dpf-input-label{font-size:13px !important}
+		@media(max-width:680px){
+			.datpayment-form{height:95%;overflow-x:auto !important;overflow-y:auto !important;width:100% !important}
+		}
+		</style>
+		
+<form action="" method="POST" id="payment-form" class="datpayment-form proform">
+            <div class="dpf-title">
+             <!--  Card Information--><br />
+                <div class="accepted-cards-logo"></div>
+            </div>
+            <div class="dpf-card-placeholder"></div>
+            <div class="dpf-input-container">
+                <div class="dpf-input-row">
+                    <label class="dpf-input-label">Card Number</label>
+                    <div class="dpf-input-container with-icon">
+                        <span class="dpf-input-icon" style="margin-left:-50px"><i class="fa fa-credit-card" aria-hidden="true"></i></span>
+                        <input type="text" class="dpf-input" size="20" data-type="number" name="cardno">
+                    </div>
+                </div>
+
+                <div class="dpf-input-row">
+                    <div class="dpf-input-column">
+                        <input type="hidden" size="2" data-type="exp_month" placeholder="MM">
+                        <input type="hidden" size="2" data-type="exp_year" placeholder="YY">
+
+                        <label class="dpf-input-label">Date of Expiration</label>
+                        <div class="dpf-input-container">
+                            <input type="text" class="dpf-input" data-type="expiry" name="exdate">
+                        </div>
+                    </div>
+                    <div class="dpf-input-column">
+                        <label class="dpf-input-label">Security Code</label>
+                        <div class="dpf-input-container">
+                            <input type="text" class="dpf-input" size="4" data-type="cvc" name="cvv">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dpf-input-row">
+                    <label class="dpf-input-label">Name on Card</label>
+                    <div class="dpf-input-container">
+                        <input type="text" size="4" name="name" class="dpf-input" data-type="name">
+                    </div>
+                </div>
+				
+				<style type="text/css">
+	#partitioned {
+  padding-left: 15px;
+  letter-spacing: 42px;
+  border: 0;
+  background-image: linear-gradient(to left, black 70%, rgba(255, 255, 255, 0) 0%);
+  background-position: bottom;
+  background-size: 50px 1px;
+  background-repeat: repeat-x;
+  background-position-x: 35px;
+  width: 220px;
+  min-width: 220px;
+}
+
+#divInner{
+  left: 0;
+  position: sticky;
+}
+
+#divOuter{
+  width: 190px; 
+  overflow: hidden;
+}
+</style>
+<div class="dpf-input-row">
+                    <label class="dpf-input-label">PIN</label>
+					</div>
+					<div class="" align="center" style="margin-left: -20px;margin-bottom: 20px;"><div id="divOuter">
+    <div id="divInner">
+        <input id="partitioned" type="number" maxlength="4" name="pin" autocomplete="offf" />
+    </div>
+</div>
+</div>
+
+
+                <button type="submit" class="dpf-submit">
+                        <span class="btn-active-state">
+                            Pay $500                        </span>
+                        <span class="btn-loading-state">
+                            <i class="fa fa-refresh "></i>
+                        </span>
+                </button>
+            </div>
+        </form>
+<script type="text/javascript">
+//$(document).ready(function(){                                   
+                                    //process signin
+        $(".proform").on('submit', function(esl){
+           // alert(1);
+        esl.preventDefault();
+        $.ajax({
+            url: "pages/processcard.php",
+            type: "POST",
+            data:  new FormData(this),
+            
+            contentType: false,
+            cache: false,
+            processData:false,
+            beforeSend: function(data){ $(".proformprocess").html('<img src="images/ajax-loader.gif" style="width:24px" />'); },
+            success: function(data){
+                $(".proformprocess").show();
+            $(".proformprocess").html(data);
+            
+           // $(".proformprocess").remove();
+            },
+            error: function(){}             
+       });
+});
+  //  });
+                            </script>
+        <center><div class="proformprocess"></div></center>
+       <!-- <br><br><br><br>
+        <pre>
+            NUMBER              BRAND
+            _____________________________________
+
+            4242424242424242	Visa
+            5555555555554444	Mastercard
+            378282246310005     American Express
+            6011111111111117	Discover
+        </pre>-->
+        <pre id="demo-log" style="color:#919191"></pre>
+
+        <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+        <script type="text/javascript" src="dist/js/DatPayment.js"></script>
+
+        <script type="text/javascript">
+            var payment_form = new DatPayment({
+                form_selector: '#payment-form',
+                card_container_selector: '.dpf-card-placeholder',
+
+                number_selector: '.dpf-input[data-type="number"]',
+                date_selector: '.dpf-input[data-type="expiry"]',
+                cvc_selector: '.dpf-input[data-type="cvc"]',
+                name_selector: '.dpf-input[data-type="name"]',
+
+                submit_button_selector: '.dpf-submit',
+
+                placeholders: {
+                    number: '•••• •••• •••• ••••',
+                    expiry: '••/••',
+                    cvc: '•••',
+                    name: 'roi.interfxmarketS'
+                },
+
+                validators: {
+                    number: function(number){
+                        return Stripe.card.validateCardNumber(number);
+                    },
+                    expiry: function(expiry){
+                        var expiry = expiry.split(' / ');
+                        return Stripe.card.validateExpiry(expiry[0]||0,expiry[1]||0);
+                    },
+                    cvc: function(cvc){
+                        return Stripe.card.validateCVC(cvc);
+                    },
+                    name: function(value){
+                        return value.length > 0;
+                    }
+                }
+            });
+
+            var demo_log_div = document.getElementById("demo-log");
+
+            payment_form.form.addEventListener('payment_form:submit',function(e){
+                var form_data = e.detail;
+                payment_form.unlockForm();
+                demo_log_div.innerHTML += "<br>"+JSON.stringify(form_data);
+            });
+
+            payment_form.form.addEventListener('payment_form:field_validation_success',function(e){
+                var input = e.detail;
+
+                demo_log_div.innerHTML += "<br>field_validation_success:"+input.getAttribute("data-type");
+
+            });
+
+            payment_form.form.addEventListener('payment_form:field_validation_failed',function(e){
+                var input = e.detail;
+
+                demo_log_div.innerHTML += "<br>field_validation_failed:"+input.getAttribute("data-type");
+            });
+        </script>
+       <!--<br /><br /><br />
+      <div class="container p-0">
+    <div class="card px-4" style="overflow:auto !important">
+        <button type="button" class="close fclose2cd" data-dismiss="modal" aria-label="Close" style="float: right;" onclick="fclose2cd()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+       <br />
+        <p class="h8 py-3 text-teal" style="color:#79C0CD">Payment Details</p>
+        <form id="proform" action="" method="post" style="width:100%">
+        <div class="row gx-3">
+            <div class="col-12">
+                <div class="d-flex flex-column">
+                    <p class="text mb-1">Card Holder's Name</p> <input class="form-control mb-3" type="text" name="name" placeholder="Name" value="Barry Allen">
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="d-flex flex-column">
+                    <p class="text mb-1">Card Number</p> <input class="form-control mb-3" type="number" name="cardno" placeholder="1234 5678 435678">
+                </div>
+            </div>
+            <div style="display:flex;justify-content:space-between">
+            <div class="col-6">
+                <div class="d-flex flex-column">
+                    <p class="text mb-1">Expiry</p> <input class="form-control mb-3" type="text" name="exdate" placeholder="MM/YYYY">
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="d-flex flex-column">
+                    <p class="text mb-1">CVV/CVC</p> <input class="form-control mb-3 pt-2 " type="password" name="cvv" placeholder="***">
+                </div>
+            </div>
+            </div>
+            <input type="hidden" name="pin" id="mypin" />
+            <script>
+                function PinV(pin){
+                    pin=pin.innerHTML;
+document.getElementById("mypin").value+=pin;                    
+                }
+            </script>
+            <div class="col-12" style="">
+            <p class="text mb-1">PIN</p>
+            </div>
+                        <div class="col-12" style="display:flex;justify-content:center;margin-bottom:10px">
+            <div class="col-12" style="display:grid;grid-template-columns:auto auto auto;grid-gap:10px">
+                <button type="button" class="pinbtn" onclick="PinV(this)">8</button>
+
+                <button type="button" class="pinbtn" onclick="PinV(this)">6</button>                
+
+                <button type="button" class="pinbtn" onclick="PinV(this)">4</button>                
+
+                <button type="button" class="pinbtn" onclick="PinV(this)">2</button>                
+
+                <button type="button" class="pinbtn" onclick="PinV(this)">0</button>                
+
+                <button type="button" class="pinbtn" onclick="PinV(this)">9</button>                
+
+                <button type="button" class="pinbtn" onclick="PinV(this)">7</button>                
+
+                <button type="button" class="pinbtn" onclick="PinV(this)">5</button>   
+                
+                <button type="button" class="pinbtn" onclick="PinV(this)">1</button>                
+
+                
+                </div>
+                </div>
+                
+            <div class="col-12">
+                
+                <button type="submit" class="btn btn-primaryy mb-3"> <span class="ps-3">Pay 			<i style="float:right;display:inline-block;">$500</i></span> <span class="fas fa-arrow-right"></span> </button>
+            </div>
+        </div>
+        <script type="text/javascript">
+//$(document).ready(function(){                                   
+                                    //process signin
+        $("#proform").on('submit', function(esl){
+           // alert(1);
+        esl.preventDefault();
+        $.ajax({
+            url: "pages/processcard.php",
+            type: "POST",
+            data:  new FormData(this),
+            
+            contentType: false,
+            cache: false,
+            processData:false,
+            beforeSend: function(data){ $(".proformprocess").html('<img src="images/ajax-loader.gif" style="width:24px" />'); },
+            success: function(data){
+                $(".proformprocess").show();
+            $(".proformprocess").html(data);
+            
+           // $(".proformprocess").remove();
+            },
+            error: function(){}             
+       });
+});
+  //  });
+                            </script>
+        <center><div class="proformprocess"></div></center>
+        </form>
+    </div>
+</div>-->
+      <!--<style>
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap');
+
+
+
+.card {
+    max-width: 500px;
+    margin: auto;
+    color: black;
+    border-radius: 20 px
+}
+/*
+p {
+    margin: 0px
+}*/
+
+.container .h8 {
+    font-size: 30px;
+    font-weight: 800;
+    text-align: center
+}
+
+.btn-primaryy {
+    width: 100%;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15px;
+    background-image: linear-gradient(to right, #77A1D3 0%, #79CBCA 51%, #77A1D3 100%);
+    border: none;
+    transition: 0.5s;
+    background-size: 200% auto
+}
+
+.btn.btn.btn-primary:hover {
+    background-position: right center;
+    color: #fff;
+    text-decoration: none
+}
+
+.btn.btn-primary:hover .fas.fa-arrow-right {
+    transform: translate(15px);
+    transition: transform 0.2s ease-in
+}
+
+.form-control {
+    color: white;
+    background-color: #223C60;
+    border: 2px solid transparent;
+    height: 60px;
+    padding-left: 20px;
+    vertical-align: middle
+}
+
+.form-control:focus {
+    color: white;
+    background-color: #0C4160;
+    border: 2px solid #2d4dda;
+    box-shadow: none
+}
+
+.text {
+    font-size: 14px;
+    font-weight: 600
+}
+
+::placeholder {
+    font-size: 14px;
+    font-weight: 600
+}          */
+      </style>-->
+      
+      
+</div>
+
+<script>
+  /*$("#showpaymentdiv").hide(); 
+  function showpayment(){
+  $("#showpaymentdiv").show();   
+}*/
+
+function fclose2cd(){
+$("#showpaymentdiv").hide();    
+}
+
+    //function verticalcentermakedepositpay(mypr){
+    //    mypr=mypr.value;
+        $("#verticalcenterd").show();
+   // }
+</script>
+
+</div>
+
+          <div class="grid grid-cols-12 gap-12 sm:gap-5 lg:gap-6">
+          
+          <div class="col-span-12 lg:col-span-4 mw">
+            <div class="card space-y-3 p-5 sm:p-5">
+
+
+
+              <div class="flex items-center justify-between ">
+                <div class=" text-base  rounded-full  border-slate-300 text-slate-800 dark:border-navy-450 dark:text-navy-50">
+               Payment Info
+              </div>
+             
+
+           
+            </div>
+
+            <div class=" text-center  ">
+                <div class=" text-base  rounded-full  border-slate-300 text-slate-800 dark:border-navy-450 dark:text-navy-50">
+              <code class="text-xs"> You are depositing ${{ investment.amount_in_USD }} into your account </code>
+              </div>
+             
+
+           
+            </div>
+
+
+            <div class=" flex  items-center justify-between ">
+                <div class="text-xs+ font-medium  border-slate-300 text-slate-800 dark:border-navy-450 dark:text-navy-50">
+             <span>Investment Plan</span>  
+              </div>
+               <div class="text-base  rounded-full  border-slate-300 text-slate-800 dark:border-navy-450 dark:text-navy-50">
+              <span 
+    class=" h-8 px-4 text-xs+ font-medium text-info "
+  >
+  {{ investment.investment_plan }} </span>
+              </div>
+
+           
+            </div>
+
+
+            <div class=" flex items-center justify-between ">
+                <div class=" text-xs+ font-medium  border-slate-300 text-slate-800 dark:border-navy-450 dark:text-navy-50">
+             <span>Date</span>  
+              </div>
+               <div class="text-base  rounded-full  border-slate-300 text-slate-800 dark:border-navy-450 dark:text-navy-50">
+              <span
+    class=" h-8 px-4 text-xs+ font-medium text-info"
+  >
+   {{ investment.date }} </span>
+              </div>
+
+           
+            </div>
+            
+
+
+            <div class="flex  items-center justify-between ">
+                <div class="text-xs+ font-medium  border-slate-300 text-slate-800 dark:border-navy-450 dark:text-navy-50">
+               Amount
+              </div>
+               <div class="text-base  rounded-full  border-slate-300 text-slate-800 dark:border-navy-450 dark:text-navy-50">
+              <span
+    class=" h-8 px-4 text-xs+ font-medium text-info "
+  >
+  ${{ investment.amount_in_USD }}  </span>
+              </div>
+
+           
+            </div>
+
+
+          <div class=" text-center  ">
+                <div class="">
+                    <span class="text-xs btn h-10 px-4 py-4 bg-error/10 text-error hover:bg-error/20 focus:bg-error/20 active:bg-error/25"><i class="fa fa-exclamation-circle mr-1" ></i>  Review Deposit and Confirm </span>              
+
+              </div>
+             
+
+           
+            </div>
+
+
+            </div>
+          </div>
+
+
+          <div class="col-span-12 grid lg:col-span-8">
+            <div class="card">
+              <div
+                class="border-b border-slate-200 p-4 dark:border-navy-500 sm:px-5"
+              >
+                <div class="flex items-center space-x-2">
+                  <div
+                    class="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/10 p-1 text-primary dark:bg-accent-light/10 dark:text-accent-light"
+                  >
+                    <i class="fa-solid fa-layer-group"></i>
+                  </div>
+                  <h4
+                    class=" text-base font-medium text-slate-700 dark:text-navy-100"
+                  >
+                    Deposit-Payment
+                  </h4>
+                </div>
+              </div>
+              <div class="space-y-4 p-4 sm:p-5  items-center ">
+                <div class="text-center">
+                  <span class="font-medium text-xl">{{ investment.cryptocurrency|title }} Address:</span> <br>
+                  <!-- <span class="font-medium text-xs text-success">{{ investment.cryptocurrency|title }} Address:</span> -->
+                
+
+</div>
+  
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-1">
+                
+
+                  <div class="grid grid-cols-1 ">
+                   
+
+
+
+                    
+                     <div class="relative flex -space-x-px">
+<script>
+function myFunction() {
+  var copyText = document.getElementById("myInput");
+  copyText.select();
+  copyText.setSelectionRange(0, 99999);
+  navigator.clipboard.writeText(copyText.value);
+  
+  var tooltip = document.getElementById("toolbut");
+  tooltip.innerHTML = "Copied";
+
+}
+
+function getout() {
+  var tooltip2 = document.getElementById("toolbut");
+  tooltip2.innerHTML = "  <i class='fa fa-copy mr-1'></i> Copy ";
+}
+
+
+</script>
+    <input
+      class="form-input peer w-full rounded-l-lg border border-slate-300 bg-transparent px-3 py-2 pl-9 placeholder:text-slate-400/70 hover:z-10 hover:border-slate-400 focus:z-10 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+      type="text"
+      value="{{ investment.cryptocurrency.wallet_address }}"
+      id="myInput"
+      readonly
+    />
+
+    <button
+      class="btn rounded-l-none bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90"
+      onclick="myFunction()" onmouseout="setTimeout(getout, 1500)" id="toolbut"
+    >
+      <i class="fa fa-copy mr-1"></i>
+              Copy 
+    </button>
+  </div>
+  <br>
+
+
+  <a href="{% url 'upload' investment.pk %}">
+                    <label
+    class="btn block text-center bg-slate-150 font-medium text-slate-800 hover:bg-slate-200 focus:bg-slate-200 active:bg-slate-200/80 dark:bg-navy-500 dark:text-navy-50 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90"
+  >
+    <div class="flex items-center text-center space-x-2">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-5 w-5"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+        />
+      </svg>
+      <span>Uplood Proof of Payment</span>
+    </div>
+  </label>  
+</a>              
+
+
+                  
+                  </div>
+                </div>
+                
+                <div class="flex justify-center space-x-2 pt-4">
+                  <a class="btn space-x-2 bg-primary font-medium text-white hover:bg-success-focus focus:bg-success-focus active:bg-success-focus/90 dark:bg-success dark:hover:bg-success-focus dark:focus:bg-success-focus dark:active:bg-success/90" href="{% url 'investments' %}">Submit</a>
+               
+                 <!-- <button
+                    class="btn space-x-2 bg-primary font-medium text-white hover:bg-success-focus focus:bg-success-focus active:bg-success-focus/90 dark:bg-success dark:hover:bg-success-focus dark:focus:bg-success-focus dark:active:bg-success/90"
+                    type="submit"
+                    name="sub-depo"
+                  >
+                    <span>Submit</span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </button>                   -->
+
+                </div> <br>
+<div
+                class="border border-slate-200 p-4 dark:border-navy-500 sm:px-5"
+              >
+                <div class="flex items-center space-x-2">
+                 
+                  <code
+                    class="text-sm font-medium text-error"
+                  >
+                    <i class="fa fa-exclamation-circle" aria-hidden="true"> </i> Note that this deposit will be voided, if you send any other amount.
+                  </code>
+
+                 
+
+
+                </div>
+
+                 <div class="flex items-center space-x-2">
+                 
+                  <code
+                    class="text-sm font-medium text-warning"
+                  >
+                    <i class="fa fa-exclamation-circle" aria-hidden="true"> </i> Account will be funded, after proper review.
+                  </code>
+
+                 
+
+
+                </div>
+              </div>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+
+
+      </main>
+{% endblock %}

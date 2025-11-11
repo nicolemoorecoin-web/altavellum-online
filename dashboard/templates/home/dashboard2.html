@@ -1,0 +1,211 @@
+{% extends "layouts/base.html" %}
+{% load static humanize %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block stylesheets %}
+<style>
+  :root{
+    --bg:#0f1a23; --card:#b07131; --card2:#152734; --ink:#d2a16d;
+    --muted:#9fb0be; --text:#e9eef2; --ring:rgba(255,255,255,.15);
+  }
+  .db-page{background:var(--bg); min-height:calc(100vh - 80px); padding:1rem 1rem 3rem}
+  @media (min-width:992px){ .db-page{padding:2rem 2rem 4rem} }
+  .db-topbar{display:flex; align-items:center; gap:.75rem; margin-bottom:1.25rem;}
+  .db-burger{height:38px;width:38px;border-radius:50%; border:2px solid var(--ink);
+    background:transparent; color:var(--ink); display:grid; place-items:center; cursor:pointer;}
+  .db-top-fill{flex:1}
+  .db-lang{display:flex; gap:.5rem; align-items:center; background:#0a141b; border:1px solid var(--ring);
+    color:#muted; border-radius:10px; padding:.35rem .6rem;}
+  .db-card{border-radius:24px; padding:1.25rem 1.25rem; box-shadow:0 6px 18px rgba(0,0,0,.25)}
+  .db-card--balance{background:var(--card); color:#1a1714;}
+  .db-card--stats{background:var(--card2); color:var(--text);}
+  .db-h0{font-size:2.6rem; line-height:1.05; font-weight:800; letter-spacing:.5px; color:#fff}
+  .db-h1{font-size:2.2rem; font-weight:800; color:var(--ink)}
+  .db-label{color:var(--muted); font-weight:600; letter-spacing:.5px;}
+  .db-sub{opacity:.85; color:#f0eee9;}
+  .db-actions{display:flex; gap:.75rem; margin-top:1.2rem; flex-wrap:wrap}
+  .db-btn{background:transparent; border:2px solid rgba(0,0,0,.45);
+    padding:.6rem 1.4rem; border-radius:12px; font-weight:800; letter-spacing:.5px; color:#1a1714; transition:.2s ease;}
+  .db-btn:hover{transform:translateY(-1px); background:rgba(0,0,0,.06)}
+  .db-grid{display:grid; gap:1rem; grid-template-columns:1fr;}
+  @media (min-width:768px){ .db-grid{grid-template-columns:1.05fr 1fr} }
+  .db-rows{display:grid; gap:1rem; grid-template-columns:1fr;}
+  @media (min-width:992px){ .db-rows{grid-template-columns:1fr 1fr} }
+  .db-panel{background:#0e1b24; border:1px solid var(--ring); border-radius:16px; padding:1rem}
+  .db-panel h5{color:#f4e8d8; letter-spacing:.08em; font-weight:800; margin:.25rem 0 1rem}
+  .alloc-grid{display:grid; gap:1rem}
+  @media (min-width:1024px){ .alloc-grid{grid-template-columns:1.2fr .8fr} }
+  .alloc-wrap{position:relative; height:300px; border-radius:14px; background:#0b1a22;
+    border:1px solid var(--ring); padding:16px; overflow:hidden;}
+  #allocChart{display:block; width:100% !important; height:100% !important;}
+  .alloc-legend{background:#0b1a22; border:1px solid var(--ring); border-radius:14px; padding:14px; list-style:none; margin:0;}
+  .alloc-legend li{display:flex; align-items:center; justify-content:space-between; gap:.75rem; padding:10px 10px; border-radius:10px;
+    color:#e9eef2; border:1px solid rgba(255,255,255,.06); background:rgba(255,255,255,.03);}
+  .alloc-legend li + li{margin-top:.5rem}
+  .cap-dot{width:10px; height:10px; border-radius:999px; display:inline-block; margin-right:.5rem}
+
+  .curr-item{display:flex; align-items:center; justify-content:space-between; gap:.75rem; padding:.7rem .6rem; border-radius:12px; color:#e9eef2}
+  .curr-item + .curr-item{border-top:1px dashed rgba(255,255,255,.08)}
+  .curr-l{display:flex; align-items:center; gap:.7rem;}
+  .curr-ic{height:34px; width:34px; display:grid; place-items:center; border-radius:50%;
+    background:rgba(255,255,255,.06); border:1px solid var(--ring)}
+  .curr-ic img{width:20px; height:20px; display:block} /* <— SVG size */
+  .curr-sym{font-weight:800; letter-spacing:.5px}
+  .curr-sub{font-size:.85rem; color:#9fb0be}
+  .curr-val{font-weight:800}
+  .curr-chg.up{color:#64d394}
+  .curr-chg.down{color:#ff7b7b}
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="db-page">
+  <div class="db-topbar">
+    <button class="db-burger" id="dbToggle" title="Toggle menu">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"></circle>
+      </svg>
+    </button>
+    <div class="db-top-fill"></div>
+    <div class="db-lang" style="gap:.4rem">
+      {% with p=request.user.profile %}
+        <img
+          src="{% if p and p.avatar %}{{ p.avatar.url }}{% else %}{% static 'assets/img/avatar-default.png' %}{% endif %}"
+          alt="avatar"
+          style="height:24px;width:24px;border-radius:50%;object-fit:cover"
+        >
+      {% endwith %}
+      <span>{{ request.user.first_name|default:request.user.username|default:"User" }}</span>
+    </div>
+  </div>
+
+  <div style="color:#c9d6df; font-size:1.25rem; margin:.25rem 0 1rem">
+    Welcome , {{ request.user.first_name|default:request.user.username|default:"User" }}!
+  </div>
+
+  <section class="db-card db-card--balance" style="margin-bottom:1rem">
+    <div class="db-label">Available Balance</div>
+    <div class="db-h0" style="margin:.2rem 0 .2rem">
+      {{ balance|floatformat:2|intcomma }} <span style="font-size:1.4rem">USD</span>
+    </div>
+    {% if balance_btc %}
+      <div class="db-sub">≈ {{ balance_btc }} BTC</div>
+    {% endif %}
+    <div class="db-actions">
+      <a class="db-btn" href="{% url 'plans' %}">INVEST</a>
+      <a class="db-btn" href="{% url 'dashboard:deposit' %}">DEPOSIT</a>
+      <a class="db-btn" href="{% url 'dashboard:withdraw' %}">WITHDRAW</a>
+    </div>
+  </section>
+
+  <section class="db-card db-card--stats" style="margin-bottom:1rem">
+    <div class="db-rows">
+      <div>
+        <div class="db-label">Total Profit</div>
+        <div class="db-h1" style="margin-top:.25rem">
+          {{ profit_total|floatformat:2|intcomma }}
+        </div>
+      </div>
+      <div>
+        <div class="db-label">Total Deposit</div>
+        <div class="db-h1" style="margin-top:.25rem">
+          {{ deposit_total|floatformat:2|intcomma }}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="db-grid">
+    <div class="db-panel">
+      <h5>CAPITAL ALLOCATION</h5>
+      <div class="alloc-grid">
+        <div class="alloc-wrap">
+          <canvas id="allocChart"></canvas>
+        </div>
+        <ul id="allocLegend" class="alloc-legend"></ul>
+      </div>
+    </div>
+
+    <div class="db-panel">
+      <h5>CURRENCY BALANCES</h5>
+
+      {% comment %}
+        We choose the icon by checking the symbol text.
+        If none match, fall back to first letter.
+      {% endcomment %}
+      {% for c in currency_rows %}
+        {% with sym=c.symbol|lower %}
+        <div class="curr-item">
+          <div class="curr-l">
+            <div class="curr-ic">
+              {% if "profit" in sym or "profits" in sym %}
+                <img src="{% static 'assets/icons/profit.svg' %}" alt="Profit">
+              {% elif "btc" in sym or "bitcoin" in sym %}
+                <img src="{% static 'assets/icons/btc.svg' %}" alt="Bitcoin">
+              {% elif "eth" in sym or "ethereum" in sym %}
+                <img src="{% static 'assets/icons/eth.svg' %}" alt="Ethereum">
+              {% elif "usdt" in sym or "tether" in sym %}
+                <img src="{% static 'assets/icons/usdt.svg' %}" alt="USDT">
+              {% else %}
+                {{ c.symbol|first }}
+              {% endif %}
+            </div>
+            <div>
+              <div class="curr-sym">{{ c.symbol }}</div>
+              <div class="curr-sub">${{ c.usd|floatformat:2 }}</div>
+            </div>
+          </div>
+          <div style="text-align:right">
+            <div class="curr-val">${{ c.usd|floatformat:2 }}</div>
+            <div class="curr-chg up"></div>
+          </div>
+        </div>
+        {% endwith %}
+      {% empty %}
+        <div class="help">No funded assets yet.</div>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock content %}
+
+{% block javascripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
+<script>
+  document.getElementById('dbToggle')?.addEventListener('click', () => {
+    document.body.classList.toggle('g-sidenav-pinned');
+  });
+
+  (function(){
+    const el = document.getElementById('allocChart');
+    if(!el) return;
+    const labels = {{ alloc_labels_json|default:"[]"|safe }};
+    const values = {{ alloc_values_json|default:"[]"|safe }};
+    const colors = {{ alloc_colors_json|default:"[]"|safe }};
+    new Chart(el.getContext('2d'), {
+      type: 'doughnut',
+      data: { labels, datasets: [{ data: values, backgroundColor: colors, borderWidth:0, cutout:'62%' }]},
+      options: {
+        responsive: true, maintainAspectRatio: false, animation: { duration: 0 },
+        plugins: { legend: { display: false }, tooltip: {
+          backgroundColor:'rgba(10,20,27,.95)', borderColor:'rgba(255,255,255,.12)',
+          borderWidth:1, padding:10, callbacks:{ label: ctx => `${ctx.label}: ${ctx.parsed}%` }
+        }}
+      }
+    });
+    const legend = document.getElementById('allocLegend');
+    if (legend) {
+      legend.innerHTML = labels.map((label,i)=>`
+        <li>
+          <div class="flex items-center">
+            <span class="cap-dot" style="background:${colors[i]||'#777'}"></span>
+            <span>${label}</span>
+          </div>
+          <strong>${values[i] ?? 0}%</strong>
+        </li>
+      `).join('') || '<li><span>No data yet</span><strong>0%</strong></li>';
+    }
+  })();
+</script>
+{% endblock javascripts %}
