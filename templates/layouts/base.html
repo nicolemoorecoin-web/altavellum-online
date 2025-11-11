@@ -1,4 +1,3 @@
-{% if user.is_authenticated %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,7 +15,7 @@
   <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
 
   <!-- Soft UI CSS -->
-  <link id="pagestyle" href="{% static 'assets/css/soft-ui-dashboard.css' %}?v=1.0.3" rel="stylesheet" />
+  <link id="pagestyle" href="{% static 'assets/css/soft-ui-dashboard.css' %}" rel="stylesheet" />
 
   {% block stylesheets %}{% endblock %}
 </head>
@@ -39,9 +38,6 @@
     }
   </script>
   <script async defer src="https://buttons.github.io/buttons.js"></script>
-  <script src="{% static 'assets/js/soft-ui-dashboard.min.js' %}?v=1.0.3"></script>
+  <script src="{% static 'assets/js/soft-ui-dashboard.min.js' %}"></script>
 </body>
 </html>
-{% else %}
-  <p>This page can't be reached. Please <a href="{% url 'login' %}">Login</a></p>
-{% endif %}

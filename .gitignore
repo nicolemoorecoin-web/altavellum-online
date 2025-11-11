@@ -1,22 +1,108 @@
-﻿# Python / Django
-__pycache__/
-*.pyc
-db.sqlite3
-/media/
-staticfiles/
-*.log
+﻿# -----------------------
+# OS / Editor junk
+# -----------------------
+.DS_Store
+**/.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+Desktop.ini
 
-# Envs / IDE
-.venv/
-venv/
-venv*/
+# VS Code / JetBrains / misc
 .vscode/
 .idea/
-.DS_Store
+*.iml
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.history/
 
-# Archives
+# -----------------------
+# Python / Django
+# -----------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.eggs/
+*.egg
+dist/
+build/
+pip-wheel-metadata/
+pip-log.txt
+
+# Virtualenvs
+.venv*/
+venv*/
+ENV/
+env/
+.python-version
+
+# Project DB (local)
+db.sqlite3
+*.sqlite3
+
+# Django collected static & uploads (generated)
+staticfiles/
+media/
+
+# Keep app-level source static IN the repo (negate the ignore above)
+!*/static/**
+# If you want to be extra explicit for your apps:
+!dashboard/static/**
+!major/static/**
+!profiles/static/**
+
+# Logs
+*.log
+logs/
+celerybeat-schedule
+celerybeat.pid
+
+# Unit test / coverage
+.coverage
+.coverage.*
+.cache/
+.nox/
+.tox/
+.pytest_cache/
+htmlcov/
+coverage.xml
+*.cover
+*.py,cover
+
+# Type checking
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+
+# Environment / secrets (adjust names you actually use)
+.env
+.env.*
+*.env
+*.env.*
+
+# Node / front-end (if present)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnp/
+.pnp.js
+.cache/
+.parcel-cache/
+.eslintcache
+
+# Archives / temp
 *.zip
-
-# App static vendor blobs (ignore all app-level static to keep repo lean)
-dashboard/static/
-major/static/
+*.tar
+*.tar.gz
+*.tmp
+*.temp
+~$*
