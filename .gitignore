@@ -1,108 +1,27 @@
-﻿# -----------------------
-# OS / Editor junk
-# -----------------------
+﻿# local junk / personal stuff
+3uToolsV3/
+JuToolsV3/
+*.exe
+*.msi
+*.zip
+*.7z
+*.lnk
 .DS_Store
-**/.DS_Store
-Thumbs.db
-ehthumbs.db
-Icon?
-Desktop.ini
 
-# VS Code / JetBrains / misc
-.vscode/
-.idea/
-*.iml
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-.history/
-
-# -----------------------
-# Python / Django
-# -----------------------
-__pycache__/
+# Python/Django
+pycache/
 *.py[cod]
-*.pyo
-*.pyd
-*.so
-*.egg-info/
-.eggs/
-*.egg
-dist/
-build/
-pip-wheel-metadata/
-pip-log.txt
+db.sqlite3
 
-# Virtualenvs
+# venvs
 .venv*/
 venv*/
-ENV/
-env/
-.python-version
 
-# Project DB (local)
-db.sqlite3
-*.sqlite3
-
-# Django collected static & uploads (generated)
+# collected/static uploads
 staticfiles/
 media/
 
-# Keep app-level source static IN the repo (negate the ignore above)
-!*/static/**
-# If you want to be extra explicit for your apps:
+# keep app static (theme assets)
 !dashboard/static/**
 !major/static/**
 !profiles/static/**
-
-# Logs
-*.log
-logs/
-celerybeat-schedule
-celerybeat.pid
-
-# Unit test / coverage
-.coverage
-.coverage.*
-.cache/
-.nox/
-.tox/
-.pytest_cache/
-htmlcov/
-coverage.xml
-*.cover
-*.py,cover
-
-# Type checking
-.mypy_cache/
-.dmypy.json
-dmypy.json
-.pyre/
-.pytype/
-
-# Environment / secrets (adjust names you actually use)
-.env
-.env.*
-*.env
-*.env.*
-
-# Node / front-end (if present)
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnp/
-.pnp.js
-.cache/
-.parcel-cache/
-.eslintcache
-
-# Archives / temp
-*.zip
-*.tar
-*.tar.gz
-*.tmp
-*.temp
-~$*
